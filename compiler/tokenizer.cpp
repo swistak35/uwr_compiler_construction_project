@@ -51,6 +51,33 @@ void tokenizer::scan( )
       return;
    }
 
+   if (r.lookahead == '&') {
+      r.moveforward();
+
+      if (r.lookahead == '&') {
+         r.moveforward();
+         
+         lookahead.push_back(tkn_OP_AND);
+         return;
+      }
+
+      lookahead.push_back(tkn_SCANERROR);
+      return;
+   }
+
+   if (r.lookahead == '|') {
+      r.moveforward();
+
+      if (r.lookahead == '|') {
+         r.moveforward();
+         
+         lookahead.push_back(tkn_OP_OR);
+         return;
+      }
+
+      lookahead.push_back(tkn_SCANERROR);
+      return;
+   }
 
    if( r. lookahead == ':' )
    {

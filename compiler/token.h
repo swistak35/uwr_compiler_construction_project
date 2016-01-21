@@ -33,6 +33,8 @@ enum tokentype
    tkn_DIVIDES,
    tkn_OP_EQ,
    tkn_OP_NEQ,
+   tkn_OP_AND,
+   tkn_OP_OR,
    tkn_FACTORIAL,
    tkn_LPAR,
    tkn_RPAR,

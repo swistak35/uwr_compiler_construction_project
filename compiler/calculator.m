@@ -4,6 +4,7 @@
 %token IDENTIFIER NUMBER 
 %token PLUS TIMES MINUS DIVIDES
 %token OP_EQ OP_NEQ
+%token OP_AND OP_OR
 %token FACTORIAL
 %token LPAR RPAR
 %token LBRACKET RBRACKET
@@ -171,7 +172,23 @@
    return t;
 %      ;
 
-% EB : EC
+% EB : EB OP_AND EC
+   token t = tkn_EB;
+   tree newt = tree("OPCALL");
+   newt.pntr->subtrees.push_back(tree("&&"));
+   newt.pntr->subtrees.push_back(EB1 -> tree.front());
+   newt.pntr->subtrees.push_back(EC3 -> tree.front());
+   t.tree.push_back(newt);
+   return t;
+%   | EB OP_OR EC
+   token t = tkn_EB;
+   tree newt = tree("OPCALL");
+   newt.pntr->subtrees.push_back(tree("||"));
+   newt.pntr->subtrees.push_back(EB1 -> tree.front());
+   newt.pntr->subtrees.push_back(EC3 -> tree.front());
+   t.tree.push_back(newt);
+   return t;
+%   | EC
    EC1 -> type = tkn_EB;
    return EC1;
 %   ;
