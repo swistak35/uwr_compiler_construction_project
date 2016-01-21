@@ -5,7 +5,6 @@
 #line 1
 
 
-
 // Non-terminal symbols:
 
 
@@ -21,7 +20,6 @@
 
 #include "assert.h"
 #include <math.h>
-
 
 
 
@@ -316,7 +314,7 @@ void reduction_0(
    std::list < token > :: iterator EOF2 ) throw( refused )
 {
 
-#line 57 "calculator.m"
+#line 56 "calculator.m"
 
 std::cout << "bye bye\n";
 { reduce( stack, position, tkn_Start, tkn_Start ); return; }
@@ -331,7 +329,7 @@ void reduction_1(
    std::list < token > :: iterator Command2 ) throw( refused )
 {
 
-#line 61 "calculator.m"
+#line 60 "calculator.m"
 
 if( Command2 -> tree. size( )) {
 std::cout << Command2 -> tree. front( ) << "\n";
@@ -348,7 +346,7 @@ void reduction_2(
    std::list < token > :: iterator position ) throw( refused )
 {
 
-#line 67 "calculator.m"
+#line 66 "calculator.m"
 
 { reduce( stack, position, tkn_Session, tkn_Session ); return; }
 
@@ -369,7 +367,7 @@ void reduction_3(
    std::list < token > :: iterator RBRACKET9 ) throw( refused )
 {
 
-#line 71 "calculator.m"
+#line 69 "calculator.m"
 
 token t = tkn_Command;
 tree newt = tree("FUN");
@@ -391,7 +389,7 @@ void reduction_4(
    std::list < token > :: iterator SEMICOLON2 ) throw( refused )
 {
 
-#line 80 "calculator.m"
+#line 78 "calculator.m"
 
 std::cout << "recovered from error\n\n";
 { reduce( stack, position, tkn_Command, tkn_Command ); return; }
@@ -406,7 +404,7 @@ void reduction_5(
    std::list < token > :: iterator IDENTIFIER2 ) throw( refused )
 {
 
-#line 84 "calculator.m"
+#line 82 "calculator.m"
 
 token t = tkn_FUNARG;
 tree newt = tree("FUNARG");
@@ -425,7 +423,7 @@ void reduction_6(
    std::list < token > :: iterator FUNARG1 ) throw( refused )
 {
 
-#line 93 "calculator.m"
+#line 91 "calculator.m"
 
 token t = tkn_FUNARGS;
 tree newt = tree("FUNARGS");
@@ -445,7 +443,7 @@ void reduction_7(
    std::list < token > :: iterator FUNARG3 ) throw( refused )
 {
 
-#line 99 "calculator.m"
+#line 97 "calculator.m"
 
 FUNARGS1 -> tree.front().pntr->subtrees.push_back(FUNARG3 -> tree.front());
 { reduce( stack, position, tkn_FUNARGS, FUNARGS1 ); return; }
@@ -459,7 +457,7 @@ void reduction_8(
    std::list < token > :: iterator position ) throw( refused )
 {
 
-#line 102 "calculator.m"
+#line 100 "calculator.m"
 
 token t = tkn_FUNARGS;
 tree newt = tree("FUNARGS");
@@ -475,7 +473,7 @@ void reduction_9(
    std::list < token > :: iterator position ) throw( refused )
 {
 
-#line 109 "calculator.m"
+#line 107 "calculator.m"
 
 token t = tkn_STATEMENTS;
 tree newt = tree("STATEMENTS");
@@ -494,7 +492,7 @@ void reduction_10(
    std::list < token > :: iterator SEMICOLON3 ) throw( refused )
 {
 
-#line 114 "calculator.m"
+#line 112 "calculator.m"
 
 STATEMENTS1 -> tree.front().pntr->subtrees.push_back(STATEMENT2 -> tree.front());
 { reduce( stack, position, tkn_STATEMENTS, STATEMENTS1 ); return; }
@@ -509,10 +507,12 @@ void reduction_11(
    std::list < token > :: iterator E1 ) throw( refused )
 {
 
-#line 119 "calculator.m"
+#line 117 "calculator.m"
 
 token t = tkn_STATEMENT;
-t.tree.push_back(E1 -> tree.front());
+tree newt = tree("EXPRESSION");
+newt.pntr->subtrees.push_back(E1 -> tree.front());
+t.tree.push_back(newt);
 { reduce( stack, position, tkn_STATEMENT, t ); return; }
 { reduce( stack, position, tkn_STATEMENT, tkn_STATEMENT ); return; }
 
@@ -532,7 +532,6 @@ void reduction_12(
 token t = tkn_STATEMENT;
 tree newt = tree("ASSIGN");
 newt.pntr->subtrees.push_back(tree(IDENTIFIER1 -> id.front()));
-if (E3 -> tree.size())
 newt.pntr->subtrees.push_back(E3 -> tree.front());
 t.tree.push_back(newt);
 { reduce( stack, position, tkn_STATEMENT, t ); return; }
@@ -547,7 +546,7 @@ void reduction_13(
    std::list < token > :: iterator INT_TYPE1 ) throw( refused )
 {
 
-#line 133 "calculator.m"
+#line 132 "calculator.m"
 
 token t = tkn_TYPE;
 t.id.push_back("INT");
@@ -563,7 +562,7 @@ void reduction_14(
    std::list < token > :: iterator FLOAT_TYPE1 ) throw( refused )
 {
 
-#line 137 "calculator.m"
+#line 136 "calculator.m"
 
 token t = tkn_TYPE;
 t.id.push_back("FLOAT");
@@ -581,7 +580,7 @@ void reduction_15(
    std::list < token > :: iterator F3 ) throw( refused )
 {
 
-#line 155 "calculator.m"
+#line 154 "calculator.m"
 
 token t = tkn_E;
 tree newt = tree("+");
@@ -605,7 +604,7 @@ void reduction_16(
    std::list < token > :: iterator F3 ) throw( refused )
 {
 
-#line 165 "calculator.m"
+#line 164 "calculator.m"
 
 
 token t = tkn_E;
@@ -628,7 +627,7 @@ void reduction_17(
    std::list < token > :: iterator F1 ) throw( refused )
 {
 
-#line 176 "calculator.m"
+#line 175 "calculator.m"
 
 
 // Change F into E, don't touch attribute.
@@ -649,7 +648,7 @@ void reduction_18(
    std::list < token > :: iterator G3 ) throw( refused )
 {
 
-#line 185 "calculator.m"
+#line 184 "calculator.m"
 
 
 token t = tkn_F;
@@ -674,7 +673,7 @@ void reduction_19(
    std::list < token > :: iterator G3 ) throw( refused )
 {
 
-#line 196 "calculator.m"
+#line 195 "calculator.m"
 
 
 token t = tkn_F;
@@ -697,7 +696,7 @@ void reduction_20(
    std::list < token > :: iterator G1 ) throw( refused )
 {
 
-#line 207 "calculator.m"
+#line 206 "calculator.m"
 
 
 G1 -> type = tkn_F;
@@ -715,7 +714,7 @@ void reduction_21(
    std::list < token > :: iterator G2 ) throw( refused )
 {
 
-#line 215 "calculator.m"
+#line 214 "calculator.m"
 
 
 token t = tkn_G;
@@ -737,7 +736,7 @@ void reduction_22(
    std::list < token > :: iterator G2 ) throw( refused )
 {
 
-#line 224 "calculator.m"
+#line 223 "calculator.m"
 
 
 { reduce( stack, position, tkn_G, G2 ); return; }
@@ -753,7 +752,7 @@ void reduction_23(
    std::list < token > :: iterator H1 ) throw( refused )
 {
 
-#line 228 "calculator.m"
+#line 227 "calculator.m"
 
 
 H1 -> type = tkn_G;
@@ -772,7 +771,7 @@ void reduction_24(
    std::list < token > :: iterator RPAR3 ) throw( refused )
 {
 
-#line 236 "calculator.m"
+#line 235 "calculator.m"
 
 E2 -> type = tkn_H;
 { reduce( stack, position, tkn_H, E2 ); return; }
@@ -787,7 +786,7 @@ void reduction_25(
    std::list < token > :: iterator IDENTIFIER1 ) throw( refused )
 {
 
-#line 239 "calculator.m"
+#line 238 "calculator.m"
 
 token h = tkn_H;
 tree newt = tree("VAR");
@@ -805,7 +804,7 @@ void reduction_26(
    std::list < token > :: iterator NUMBER1 ) throw( refused )
 {
 
-#line 245 "calculator.m"
+#line 244 "calculator.m"
 
 token h = tkn_H;
 tree newt = tree("INT");
@@ -826,7 +825,7 @@ void reduction_27(
    std::list < token > :: iterator RPAR4 ) throw( refused )
 {
 
-#line 251 "calculator.m"
+#line 250 "calculator.m"
 
 token h = tkn_H;
 std::vector<tree> strees = std::vector<tree>();
@@ -847,7 +846,7 @@ void reduction_28(
    std::list < token > :: iterator E1 ) throw( refused )
 {
 
-#line 263 "calculator.m"
+#line 262 "calculator.m"
 
 token t = tkn_LISTARGS;
 t.tree.push_back(E1 -> tree.front());
@@ -865,7 +864,7 @@ void reduction_29(
    std::list < token > :: iterator E3 ) throw( refused )
 {
 
-#line 267 "calculator.m"
+#line 266 "calculator.m"
 
 LISTARGS1 -> tree.push_back(E3 -> tree.front());
 { reduce( stack, position, tkn_LISTARGS, LISTARGS1 ); return; }

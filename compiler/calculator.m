@@ -1,5 +1,4 @@
 
-
 %token EOF SCANERROR
 %token SEMICOLON BECOMES COMMA 
 %token IDENTIFIER NUMBER 
@@ -67,7 +66,6 @@
 %         |
 %         ;
 
-
 % Command : FUNKEYWORD TYPE IDENTIFIER LPAR FUNARGS RPAR LBRACKET STATEMENTS RBRACKET
    token t = tkn_Command;
    tree newt = tree("FUN");
@@ -118,14 +116,15 @@
 
 % STATEMENT : E
    token t = tkn_STATEMENT;
-   t.tree.push_back(E1 -> tree.front());
+   tree newt = tree("EXPRESSION");
+   newt.pntr->subtrees.push_back(E1 -> tree.front());
+   t.tree.push_back(newt);
    return t;
 %           | IDENTIFIER BECOMES E
    token t = tkn_STATEMENT;
    tree newt = tree("ASSIGN");
    newt.pntr->subtrees.push_back(tree(IDENTIFIER1 -> id.front()));
-   if (E3 -> tree.size())
-      newt.pntr->subtrees.push_back(E3 -> tree.front());
+   newt.pntr->subtrees.push_back(E3 -> tree.front());
    t.tree.push_back(newt);
    return t;
 %           ;
