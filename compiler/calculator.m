@@ -139,108 +139,71 @@
    return t;
 %      ;
 
-
-
-
-
-
-
-
-
-
-
-
-
-% E   : E PLUS F 
+% E : E PLUS F 
    token t = tkn_E;
-   tree newt = tree("+");
-   if (E1 -> tree.size())
-      newt.pntr->subtrees.push_back(E1 -> tree.front());
-   if (F3 -> tree.size())
-      newt.pntr->subtrees.push_back(F3 -> tree.front());
+   tree newt = tree("OPCALL");
+   newt.pntr->subtrees.push_back(tree("+"));
+   newt.pntr->subtrees.push_back(E1 -> tree.front());
+   newt.pntr->subtrees.push_back(F3 -> tree.front());
    t.tree.push_back(newt);
    return t;
-
-%     | E MINUS F 
-
+%   | E MINUS F 
    token t = tkn_E;
-   tree newt = tree("-");
-   if (E1 -> tree.size())
-      newt.pntr->subtrees.push_back(E1 -> tree.front());
-   if (F3 -> tree.size())
-      newt.pntr->subtrees.push_back(F3 -> tree.front());
+   tree newt = tree("OPCALL");
+   newt.pntr->subtrees.push_back(tree("-"));
+   newt.pntr->subtrees.push_back(E1 -> tree.front());
+   newt.pntr->subtrees.push_back(F3 -> tree.front());
    t.tree.push_back(newt);
    return t;
-
-%     | F 
-
-   // Change F into E, don't touch attribute.
-
+%   | F 
    F1 -> type = tkn_E;
    return F1;
+%   ;
 
-%     ;
-
-% F   : F TIMES G 
-
+% F : F TIMES G 
    token t = tkn_F;
-   tree newt = tree("*");
-   if (F1 -> tree.size())
-      newt.pntr->subtrees.push_back(F1 -> tree.front());
-   if (G3 -> tree.size())
-      newt.pntr->subtrees.push_back(G3 -> tree.front());
+   tree newt = tree("OPCALL");
+   newt.pntr->subtrees.push_back(tree("*"));
+   newt.pntr->subtrees.push_back(F1 -> tree.front());
+   newt.pntr->subtrees.push_back(G3 -> tree.front());
    t.tree.push_back(newt);
    return t;
-
-%     | F DIVIDES G
-
+%   | F DIVIDES G
    token t = tkn_F;
-   tree newt = tree("/");
-   if (F1 -> tree.size())
-      newt.pntr->subtrees.push_back(F1 -> tree.front());
-   if (G3 -> tree.size())
-      newt.pntr->subtrees.push_back(G3 -> tree.front());
+   tree newt = tree("OPCALL");
+   newt.pntr->subtrees.push_back(tree("/"));
+   newt.pntr->subtrees.push_back(F1 -> tree.front());
+   newt.pntr->subtrees.push_back(G3 -> tree.front());
    t.tree.push_back(newt);
    return t;
- 
-%     | G 
-
+%   | G 
    G1 -> type = tkn_F;
    return G1;
+%   ;
 
-%     ;
-
-
-%  G : MINUS G 
-
+% G : MINUS G 
    token t = tkn_G;
-   tree newt = tree("-");
-   if (G2 -> tree.size())
-      newt.pntr->subtrees.push_back(G2 -> tree.front());
+   tree newt = tree("OPCALL");
+   newt.pntr->subtrees.push_back(tree("-"));
+   newt.pntr->subtrees.push_back(G2 -> tree.front());
    t.tree.push_back(newt);
    return t;
-
-%    | PLUS G 
-
+%   | PLUS G 
    return G2;
-
-%    | H 
-
+%   | H 
    H1 -> type = tkn_G;
    return H1;
-
-%    ;
-
+%   ;
 
 % H : LPAR E RPAR
    E2 -> type = tkn_H;
    return E2;
 %   | IDENTIFIER 
-   token h = tkn_H;
+   token t = tkn_H;
    tree newt = tree("VAR");
    newt.pntr->subtrees.push_back(tree(IDENTIFIER1 -> id.front()));
-   h.tree.push_back(newt);
-   return h;
+   t.tree.push_back(newt);
+   return t;
 %   | NUMBER 
    token h = tkn_H;
    tree newt = tree("INT");
@@ -257,7 +220,6 @@
    h.tree.push_back(newt);
    return h;
 %   ;
-
 
 % LISTARGS : E 
    token t = tkn_LISTARGS;

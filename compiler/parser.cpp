@@ -36,21 +36,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #include "token.h"
 #include "tokenizer.h"
 #include "parser.h"
@@ -580,17 +565,15 @@ void reduction_15(
    std::list < token > :: iterator F3 ) throw( refused )
 {
 
-#line 154 "calculator.m"
+#line 142 "calculator.m"
 
 token t = tkn_E;
-tree newt = tree("+");
-if (E1 -> tree.size())
+tree newt = tree("OPCALL");
+newt.pntr->subtrees.push_back(tree("+"));
 newt.pntr->subtrees.push_back(E1 -> tree.front());
-if (F3 -> tree.size())
 newt.pntr->subtrees.push_back(F3 -> tree.front());
 t.tree.push_back(newt);
 { reduce( stack, position, tkn_E, t ); return; }
-
 { reduce( stack, position, tkn_E, tkn_E ); return; }
 
 }
@@ -604,18 +587,15 @@ void reduction_16(
    std::list < token > :: iterator F3 ) throw( refused )
 {
 
-#line 164 "calculator.m"
-
+#line 150 "calculator.m"
 
 token t = tkn_E;
-tree newt = tree("-");
-if (E1 -> tree.size())
+tree newt = tree("OPCALL");
+newt.pntr->subtrees.push_back(tree("-"));
 newt.pntr->subtrees.push_back(E1 -> tree.front());
-if (F3 -> tree.size())
 newt.pntr->subtrees.push_back(F3 -> tree.front());
 t.tree.push_back(newt);
 { reduce( stack, position, tkn_E, t ); return; }
-
 { reduce( stack, position, tkn_E, tkn_E ); return; }
 
 }
@@ -627,14 +607,10 @@ void reduction_17(
    std::list < token > :: iterator F1 ) throw( refused )
 {
 
-#line 175 "calculator.m"
-
-
-// Change F into E, don't touch attribute.
+#line 158 "calculator.m"
 
 F1 -> type = tkn_E;
 { reduce( stack, position, tkn_E, F1 ); return; }
-
 { reduce( stack, position, tkn_E, tkn_E ); return; }
 
 }
@@ -648,18 +624,15 @@ void reduction_18(
    std::list < token > :: iterator G3 ) throw( refused )
 {
 
-#line 184 "calculator.m"
-
+#line 163 "calculator.m"
 
 token t = tkn_F;
-tree newt = tree("*");
-if (F1 -> tree.size())
+tree newt = tree("OPCALL");
+newt.pntr->subtrees.push_back(tree("*"));
 newt.pntr->subtrees.push_back(F1 -> tree.front());
-if (G3 -> tree.size())
 newt.pntr->subtrees.push_back(G3 -> tree.front());
 t.tree.push_back(newt);
 { reduce( stack, position, tkn_F, t ); return; }
-
 { reduce( stack, position, tkn_F, tkn_F ); return; }
 
 }
@@ -673,18 +646,15 @@ void reduction_19(
    std::list < token > :: iterator G3 ) throw( refused )
 {
 
-#line 195 "calculator.m"
-
+#line 171 "calculator.m"
 
 token t = tkn_F;
-tree newt = tree("/");
-if (F1 -> tree.size())
+tree newt = tree("OPCALL");
+newt.pntr->subtrees.push_back(tree("/"));
 newt.pntr->subtrees.push_back(F1 -> tree.front());
-if (G3 -> tree.size())
 newt.pntr->subtrees.push_back(G3 -> tree.front());
 t.tree.push_back(newt);
 { reduce( stack, position, tkn_F, t ); return; }
-
 { reduce( stack, position, tkn_F, tkn_F ); return; }
 
 }
@@ -696,12 +666,10 @@ void reduction_20(
    std::list < token > :: iterator G1 ) throw( refused )
 {
 
-#line 206 "calculator.m"
-
+#line 179 "calculator.m"
 
 G1 -> type = tkn_F;
 { reduce( stack, position, tkn_F, G1 ); return; }
-
 { reduce( stack, position, tkn_F, tkn_F ); return; }
 
 }
@@ -714,16 +682,14 @@ void reduction_21(
    std::list < token > :: iterator G2 ) throw( refused )
 {
 
-#line 214 "calculator.m"
-
+#line 184 "calculator.m"
 
 token t = tkn_G;
-tree newt = tree("-");
-if (G2 -> tree.size())
+tree newt = tree("OPCALL");
+newt.pntr->subtrees.push_back(tree("-"));
 newt.pntr->subtrees.push_back(G2 -> tree.front());
 t.tree.push_back(newt);
 { reduce( stack, position, tkn_G, t ); return; }
-
 { reduce( stack, position, tkn_G, tkn_G ); return; }
 
 }
@@ -736,11 +702,9 @@ void reduction_22(
    std::list < token > :: iterator G2 ) throw( refused )
 {
 
-#line 223 "calculator.m"
-
+#line 191 "calculator.m"
 
 { reduce( stack, position, tkn_G, G2 ); return; }
-
 { reduce( stack, position, tkn_G, tkn_G ); return; }
 
 }
@@ -752,12 +716,10 @@ void reduction_23(
    std::list < token > :: iterator H1 ) throw( refused )
 {
 
-#line 227 "calculator.m"
-
+#line 193 "calculator.m"
 
 H1 -> type = tkn_G;
 { reduce( stack, position, tkn_G, H1 ); return; }
-
 { reduce( stack, position, tkn_G, tkn_G ); return; }
 
 }
@@ -771,7 +733,7 @@ void reduction_24(
    std::list < token > :: iterator RPAR3 ) throw( refused )
 {
 
-#line 235 "calculator.m"
+#line 198 "calculator.m"
 
 E2 -> type = tkn_H;
 { reduce( stack, position, tkn_H, E2 ); return; }
@@ -786,13 +748,13 @@ void reduction_25(
    std::list < token > :: iterator IDENTIFIER1 ) throw( refused )
 {
 
-#line 238 "calculator.m"
+#line 201 "calculator.m"
 
-token h = tkn_H;
+token t = tkn_H;
 tree newt = tree("VAR");
 newt.pntr->subtrees.push_back(tree(IDENTIFIER1 -> id.front()));
-h.tree.push_back(newt);
-{ reduce( stack, position, tkn_H, h ); return; }
+t.tree.push_back(newt);
+{ reduce( stack, position, tkn_H, t ); return; }
 { reduce( stack, position, tkn_H, tkn_H ); return; }
 
 }
@@ -804,7 +766,7 @@ void reduction_26(
    std::list < token > :: iterator NUMBER1 ) throw( refused )
 {
 
-#line 244 "calculator.m"
+#line 207 "calculator.m"
 
 token h = tkn_H;
 tree newt = tree("INT");
@@ -825,7 +787,7 @@ void reduction_27(
    std::list < token > :: iterator RPAR4 ) throw( refused )
 {
 
-#line 250 "calculator.m"
+#line 213 "calculator.m"
 
 token h = tkn_H;
 std::vector<tree> strees = std::vector<tree>();
@@ -846,7 +808,7 @@ void reduction_28(
    std::list < token > :: iterator E1 ) throw( refused )
 {
 
-#line 262 "calculator.m"
+#line 224 "calculator.m"
 
 token t = tkn_LISTARGS;
 t.tree.push_back(E1 -> tree.front());
@@ -864,7 +826,7 @@ void reduction_29(
    std::list < token > :: iterator E3 ) throw( refused )
 {
 
-#line 266 "calculator.m"
+#line 228 "calculator.m"
 
 LISTARGS1 -> tree.push_back(E3 -> tree.front());
 { reduce( stack, position, tkn_LISTARGS, LISTARGS1 ); return; }
