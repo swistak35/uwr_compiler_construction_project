@@ -5,7 +5,7 @@ maphoon
 lib
 
 # Makefile
-Makefile
+# Makefile
 
 # binary
 czero
@@ -14,7 +14,7 @@ czero
 CMakeCache.txt
 CMakeFiles
 CMakeScripts
-Makefile
+# Makefile
 cmake_install.cmake
 install_manifest.txt
 
