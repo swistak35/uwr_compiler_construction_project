@@ -8,10 +8,12 @@
 %token LPAR RPAR
 %token LBRACKET RBRACKET
 %token FUNKEYWORD
+%token INT_TYPE FLOAT_TYPE
 
 // Non-terminal symbols:
 
 %token E F G H LISTARGS 
+%token TYPE
 
 %token Session Command 
 %token Start 
@@ -25,6 +27,7 @@
 %attribute id            std::string
 %attribute reason        std::string
 
+%constraint TYPE id 1 2
 %constraint IDENTIFIER id 1 2
 %constraint E value 0 2
 %constraint F value 0 2
@@ -86,12 +89,14 @@
    t.tree.push_back(newt);
    return t;
 
-%         | FUNKEYWORD IDENTIFIER LPAR RPAR LBRACKET RBRACKET SEMICOLON
+%         | FUNKEYWORD TYPE IDENTIFIER LPAR RPAR LBRACKET RBRACKET SEMICOLON
 
    token t = tkn_Command;
    tree newt = tree("FUN");
-   if (IDENTIFIER2 -> id.size())
-      newt.pntr->subtrees.push_back(tree(IDENTIFIER2 -> id.front()));
+   if (TYPE2 -> id.size())
+      newt.pntr->subtrees.push_back(tree(TYPE2 -> id.front()));
+   if (IDENTIFIER3 -> id.size())
+      newt.pntr->subtrees.push_back(tree(IDENTIFIER3 -> id.front()));
    t.tree.push_back(newt);
    return t;
 
@@ -100,6 +105,18 @@
    std::cout << "recovered from error\n\n";
 
 %         ;
+
+% TYPE : INT_TYPE
+   token t = tkn_TYPE;
+   t.id.push_back("INT");
+   return t;
+%      | FLOAT_TYPE
+   token t = tkn_TYPE;
+   t.id.push_back("FLOAT");
+   return t;
+%      ;
+
+
 
 % E   : E PLUS F 
 
