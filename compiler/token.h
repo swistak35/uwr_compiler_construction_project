@@ -39,6 +39,8 @@ enum tokentype
    tkn_FUNKEYWORD,
    tkn_WHILE_KW,
    tkn_RETURN_KW,
+   tkn_IF_KW,
+   tkn_ELSE_KW,
    tkn_INT_TYPE,
    tkn_FLOAT_TYPE,
    tkn_B,

@@ -28,6 +28,8 @@ bool token::iswellformed( ) const
    case tkn_FUNKEYWORD:
    case tkn_WHILE_KW:
    case tkn_RETURN_KW:
+   case tkn_IF_KW:
+   case tkn_ELSE_KW:
    case tkn_INT_TYPE:
    case tkn_FLOAT_TYPE:
    case tkn_Session:
@@ -129,6 +131,10 @@ std::ostream& operator << ( std::ostream& stream, const token& t )
       stream << "WHILE_KW( "; break;
    case tkn_RETURN_KW:
       stream << "RETURN_KW( "; break;
+   case tkn_IF_KW:
+      stream << "IF_KW( "; break;
+   case tkn_ELSE_KW:
+      stream << "ELSE_KW( "; break;
    case tkn_INT_TYPE:
       stream << "INT_TYPE( "; break;
    case tkn_FLOAT_TYPE:

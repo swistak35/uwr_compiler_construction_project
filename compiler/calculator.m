@@ -6,7 +6,7 @@
 %token FACTORIAL
 %token LPAR RPAR
 %token LBRACKET RBRACKET
-%token FUNKEYWORD WHILE_KW RETURN_KW
+%token FUNKEYWORD WHILE_KW RETURN_KW IF_KW ELSE_KW
 %token INT_TYPE FLOAT_TYPE
 
 // Non-terminal symbols:
@@ -139,6 +139,14 @@
    token t = tkn_STATEMENT;
    tree newt = tree("RETURN");
    newt.pntr->subtrees.push_back(E2 -> tree.front());
+   t.tree.push_back(newt);
+   return t;
+%           | IF_KW B LBRACKET STATEMENTS RBRACKET ELSE_KW LBRACKET STATEMENTS RBRACKET
+   token t = tkn_STATEMENT;
+   tree newt = tree("IF");
+   newt.pntr->subtrees.push_back(B2 -> tree.front());
+   newt.pntr->subtrees.push_back(STATEMENTS4 -> tree.front());
+   newt.pntr->subtrees.push_back(STATEMENTS8 -> tree.front());
    t.tree.push_back(newt);
    return t;
 %           ;

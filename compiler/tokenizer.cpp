@@ -94,6 +94,10 @@ void tokenizer::scan( )
          lookahead.push_back(tkn_WHILE_KW);
       } else if (s.compare("return") == 0) {
          lookahead.push_back(tkn_RETURN_KW);
+      } else if (s.compare("if") == 0) {
+         lookahead.push_back(tkn_IF_KW);
+      } else if (s.compare("else") == 0) {
+         lookahead.push_back(tkn_ELSE_KW);
       } else if (s.compare("int") == 0) {
          lookahead.push_back(tkn_INT_TYPE);
       } else if (s.compare("float") == 0) {
