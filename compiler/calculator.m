@@ -6,10 +6,12 @@
 %token PLUS TIMES MINUS DIVIDES
 %token FACTORIAL
 %token LPAR RPAR
+%token FUNKEYWORD
 
 // Non-terminal symbols:
 
 %token E F G H LISTARGS 
+
 %token Session Command 
 %token Start 
 
@@ -80,6 +82,14 @@
       newt.pntr->subtrees.push_back(tree(IDENTIFIER1 -> id.front()));
    if (E3 -> tree.size())
       newt.pntr->subtrees.push_back(E3 -> tree.front());
+   t.tree.push_back(newt);
+   return t;
+%         | FUNKEYWORD IDENTIFIER LPAR RPAR SEMICOLON
+
+   token t = tkn_Command;
+   tree newt = tree("FUN");
+   if (IDENTIFIER2 -> id.size())
+      newt.pntr->subtrees.push_back(tree(IDENTIFIER2 -> id.front()));
    t.tree.push_back(newt);
    return t;
 
