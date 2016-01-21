@@ -34,10 +34,10 @@
 %constraint STATEMENTS tree 1 2
 %constraint STATEMENT tree 1 2
 %constraint IDENTIFIER id 1 2
-%constraint E tree 0 2
-%constraint F tree 0 2
-%constraint G tree 0 2
-%constraint H tree 0 2
+%constraint E tree 1 2
+%constraint F tree 1 2
+%constraint G tree 1 2
+%constraint H tree 1 2
 %constraint LISTARGS tree 0
 %constraint SCANERROR id 1 2
 %constraint NUMBER value 1 2
@@ -211,14 +211,14 @@
    h.tree.push_back(newt);
    return h;
 %   | IDENTIFIER LPAR LISTARGS RPAR 
-   token h = tkn_H;
-   std::vector<tree> strees = std::vector<tree>();
+   token t = tkn_H;
+   tree newt = tree("FUNCALL");
+   newt.pntr->subtrees.push_back(tree(IDENTIFIER1 -> id.front()));
    for (auto a : LISTARGS3 -> tree) {
-      strees.push_back(a);
+      newt.pntr->subtrees.push_back(a);
    }
-   tree newt = tree(IDENTIFIER1 -> id.front(), strees);
-   h.tree.push_back(newt);
-   return h;
+   t.tree.push_back(newt);
+   return t;
 %   ;
 
 % LISTARGS : E 

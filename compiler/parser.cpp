@@ -789,14 +789,14 @@ void reduction_27(
 
 #line 213 "calculator.m"
 
-token h = tkn_H;
-std::vector<tree> strees = std::vector<tree>();
+token t = tkn_H;
+tree newt = tree("FUNCALL");
+newt.pntr->subtrees.push_back(tree(IDENTIFIER1 -> id.front()));
 for (auto a : LISTARGS3 -> tree) {
-strees.push_back(a);
+newt.pntr->subtrees.push_back(a);
 }
-tree newt = tree(IDENTIFIER1 -> id.front(), strees);
-h.tree.push_back(newt);
-{ reduce( stack, position, tkn_H, h ); return; }
+t.tree.push_back(newt);
+{ reduce( stack, position, tkn_H, t ); return; }
 { reduce( stack, position, tkn_H, tkn_H ); return; }
 
 }

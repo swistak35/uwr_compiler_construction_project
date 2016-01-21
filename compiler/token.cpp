@@ -55,17 +55,6 @@ bool token::iswellformed( ) const
    case tkn_F:
    case tkn_G:
    case tkn_H:
-      if( id. size( ) >= 1 ) return false;
-      if( reason. size( ) >= 1 ) return false;
-      if( tree. size( ) >= 2 ) return false;
-      if( value. size( ) >= 1 ) return false;
-      return true;
-   case tkn_LISTARGS:
-   case tkn_Command:
-      if( id. size( ) >= 1 ) return false;
-      if( reason. size( ) >= 1 ) return false;
-      if( value. size( ) >= 1 ) return false;
-      return true;
    case tkn_STATEMENTS:
    case tkn_STATEMENT:
    case tkn_FUNARGS:
@@ -74,6 +63,12 @@ bool token::iswellformed( ) const
       if( reason. size( ) >= 1 ) return false;
       if( tree. size( ) < 1 ) return false;
       if( tree. size( ) >= 2 ) return false;
+      if( value. size( ) >= 1 ) return false;
+      return true;
+   case tkn_LISTARGS:
+   case tkn_Command:
+      if( id. size( ) >= 1 ) return false;
+      if( reason. size( ) >= 1 ) return false;
       if( value. size( ) >= 1 ) return false;
       return true;
    }
