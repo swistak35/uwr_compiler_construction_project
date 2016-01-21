@@ -1,0 +1,6 @@
+*.o
+maphoon
+token.h
+token.cpp
+parser.h
+parser.cpp
