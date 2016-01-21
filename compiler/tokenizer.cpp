@@ -78,13 +78,8 @@ void tokenizer::scan( )
    }
 
 
-   if( isletter( r. lookahead ) || r. lookahead == '_' )
-   {
+   if (isletter(r.lookahead) || r. lookahead == '_') {
       std::string s = std::string();
-      /* lookahead. push_back( tkn_IDENTIFIER ); */
-      /* lookahead. back( ). id. push_back( std::string( )); */
-         // This appends an empty string to id, so that
-         // we have a string attribute now.
 
       s += r.lookahead;
       r.moveforward();
@@ -99,15 +94,6 @@ void tokenizer::scan( )
          lookahead.push_back(tkn_IDENTIFIER);
          lookahead.back().id.push_back(s);
       }
-      /* lookahead. back( ). id. back( ) += r. lookahead; */  
-      /* r. moveforward( ); */
-
-      /* while( isletter( r. lookahead ) || isdigit( r. lookahead ) || */
-      /*        r. lookahead == '_' ) */
-      /* { */
-      /*    lookahead. back( ). id. back( ) += r. lookahead; */
-      /*    r. moveforward( ); */
-      /* } */
 
       return;
    }
