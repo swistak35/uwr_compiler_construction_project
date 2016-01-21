@@ -58,12 +58,12 @@ bool token::iswellformed( ) const
       if( value. size( ) < 1 ) return false;
       if( value. size( ) >= 2 ) return false;
       return true;
-   case tkn_B:
+   case tkn_EB:
    case tkn_EC:
-   case tkn_E:
-   case tkn_F:
-   case tkn_G:
-   case tkn_H:
+   case tkn_EE:
+   case tkn_EF:
+   case tkn_EG:
+   case tkn_EH:
    case tkn_STATEMENTS:
    case tkn_STATEMENT:
    case tkn_FUNARGS:
@@ -149,18 +149,18 @@ std::ostream& operator << ( std::ostream& stream, const token& t )
       stream << "INT_TYPE( "; break;
    case tkn_FLOAT_TYPE:
       stream << "FLOAT_TYPE( "; break;
-   case tkn_B:
-      stream << "B( "; break;
+   case tkn_EB:
+      stream << "EB( "; break;
    case tkn_EC:
       stream << "EC( "; break;
-   case tkn_E:
-      stream << "E( "; break;
-   case tkn_F:
-      stream << "F( "; break;
-   case tkn_G:
-      stream << "G( "; break;
-   case tkn_H:
-      stream << "H( "; break;
+   case tkn_EE:
+      stream << "EE( "; break;
+   case tkn_EF:
+      stream << "EF( "; break;
+   case tkn_EG:
+      stream << "EG( "; break;
+   case tkn_EH:
+      stream << "EH( "; break;
    case tkn_LISTARGS:
       stream << "LISTARGS( "; break;
    case tkn_TYPE:

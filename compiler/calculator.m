@@ -12,7 +12,7 @@
 
 // Non-terminal symbols:
 
-%token B EC E F G H LISTARGS 
+%token EB EC EE EF EG EH LISTARGS 
 %token TYPE
 %token STATEMENTS STATEMENT
 %token FUNARGS FUNARG
@@ -35,12 +35,12 @@
 %constraint STATEMENTS tree 1 2
 %constraint STATEMENT tree 1 2
 %constraint IDENTIFIER id 1 2
-%constraint B tree 1 2
+%constraint EB tree 1 2
 %constraint EC tree 1 2
-%constraint E tree 1 2
-%constraint F tree 1 2
-%constraint G tree 1 2
-%constraint H tree 1 2
+%constraint EE tree 1 2
+%constraint EF tree 1 2
+%constraint EG tree 1 2
+%constraint EH tree 1 2
 %constraint LISTARGS tree 0
 %constraint SCANERROR id 1 2
 %constraint NUMBER value 1 2
@@ -125,36 +125,36 @@
    return STATEMENTS1;
 %            ;
 
-% STATEMENT : E
+% STATEMENT : EB
    token t = tkn_STATEMENT;
    tree newt = tree("EXPRESSION");
-   newt.pntr->subtrees.push_back(E1 -> tree.front());
+   newt.pntr->subtrees.push_back(EB1 -> tree.front());
    t.tree.push_back(newt);
    return t;
-%           | IDENTIFIER BECOMES E
+%           | IDENTIFIER BECOMES EB
    token t = tkn_STATEMENT;
    tree newt = tree("ASSIGN");
    newt.pntr->subtrees.push_back(tree(IDENTIFIER1 -> id.front()));
-   newt.pntr->subtrees.push_back(E3 -> tree.front());
+   newt.pntr->subtrees.push_back(EB3 -> tree.front());
    t.tree.push_back(newt);
    return t;
-%           | WHILE_KW B LBRACKET STATEMENTS RBRACKET
+%           | WHILE_KW EB LBRACKET STATEMENTS RBRACKET
    token t = tkn_STATEMENT;
    tree newt = tree("WHILE");
-   newt.pntr->subtrees.push_back(B2 -> tree.front());
+   newt.pntr->subtrees.push_back(EB2 -> tree.front());
    newt.pntr->subtrees.push_back(STATEMENTS4 -> tree.front());
    t.tree.push_back(newt);
    return t;
-%           | RETURN_KW E
+%           | RETURN_KW EB
    token t = tkn_STATEMENT;
    tree newt = tree("RETURN");
-   newt.pntr->subtrees.push_back(E2 -> tree.front());
+   newt.pntr->subtrees.push_back(EB2 -> tree.front());
    t.tree.push_back(newt);
    return t;
-%           | IF_KW B LBRACKET STATEMENTS RBRACKET ELSE_KW LBRACKET STATEMENTS RBRACKET
+%           | IF_KW EB LBRACKET STATEMENTS RBRACKET ELSE_KW LBRACKET STATEMENTS RBRACKET
    token t = tkn_STATEMENT;
    tree newt = tree("IF");
-   newt.pntr->subtrees.push_back(B2 -> tree.front());
+   newt.pntr->subtrees.push_back(EB2 -> tree.front());
    newt.pntr->subtrees.push_back(STATEMENTS4 -> tree.front());
    newt.pntr->subtrees.push_back(STATEMENTS8 -> tree.front());
    t.tree.push_back(newt);
@@ -171,105 +171,105 @@
    return t;
 %      ;
 
-% B : EC
-   EC1 -> type = tkn_B;
+% EB : EC
+   EC1 -> type = tkn_EB;
    return EC1;
 %   ;
 
-% EC : EC OP_EQ E
+% EC : EC OP_EQ EE
    token t = tkn_EC;
    tree newt = tree("OPCALL");
    newt.pntr->subtrees.push_back(tree("=="));
    newt.pntr->subtrees.push_back(EC1 -> tree.front());
-   newt.pntr->subtrees.push_back(E3 -> tree.front());
+   newt.pntr->subtrees.push_back(EE3 -> tree.front());
    t.tree.push_back(newt);
    return t;
-%   | EC OP_NEQ E
+%   | EC OP_NEQ EE
    token t = tkn_EC;
    tree newt = tree("OPCALL");
    newt.pntr->subtrees.push_back(tree("!="));
    newt.pntr->subtrees.push_back(EC1 -> tree.front());
-   newt.pntr->subtrees.push_back(E3 -> tree.front());
+   newt.pntr->subtrees.push_back(EE3 -> tree.front());
    t.tree.push_back(newt);
    return t;
-%   | E
-   E1 -> type = tkn_EC;
-   return E1;
+%   | EE
+   EE1 -> type = tkn_EC;
+   return EE1;
 %   ;
 
-% E : E PLUS F 
-   token t = tkn_E;
+% EE : EE PLUS EF 
+   token t = tkn_EE;
    tree newt = tree("OPCALL");
    newt.pntr->subtrees.push_back(tree("+"));
-   newt.pntr->subtrees.push_back(E1 -> tree.front());
-   newt.pntr->subtrees.push_back(F3 -> tree.front());
+   newt.pntr->subtrees.push_back(EE1 -> tree.front());
+   newt.pntr->subtrees.push_back(EF3 -> tree.front());
    t.tree.push_back(newt);
    return t;
-%   | E MINUS F 
-   token t = tkn_E;
+%   | EE MINUS EF 
+   token t = tkn_EE;
    tree newt = tree("OPCALL");
    newt.pntr->subtrees.push_back(tree("-"));
-   newt.pntr->subtrees.push_back(E1 -> tree.front());
-   newt.pntr->subtrees.push_back(F3 -> tree.front());
+   newt.pntr->subtrees.push_back(EE1 -> tree.front());
+   newt.pntr->subtrees.push_back(EF3 -> tree.front());
    t.tree.push_back(newt);
    return t;
-%   | F 
-   F1 -> type = tkn_E;
-   return F1;
+%   | EF 
+   EF1 -> type = tkn_EE;
+   return EF1;
 %   ;
 
-% F : F TIMES G 
-   token t = tkn_F;
+% EF : EF TIMES EG 
+   token t = tkn_EF;
    tree newt = tree("OPCALL");
    newt.pntr->subtrees.push_back(tree("*"));
-   newt.pntr->subtrees.push_back(F1 -> tree.front());
-   newt.pntr->subtrees.push_back(G3 -> tree.front());
+   newt.pntr->subtrees.push_back(EF1 -> tree.front());
+   newt.pntr->subtrees.push_back(EG3 -> tree.front());
    t.tree.push_back(newt);
    return t;
-%   | F DIVIDES G
-   token t = tkn_F;
+%   | EF DIVIDES EG
+   token t = tkn_EF;
    tree newt = tree("OPCALL");
    newt.pntr->subtrees.push_back(tree("/"));
-   newt.pntr->subtrees.push_back(F1 -> tree.front());
-   newt.pntr->subtrees.push_back(G3 -> tree.front());
+   newt.pntr->subtrees.push_back(EF1 -> tree.front());
+   newt.pntr->subtrees.push_back(EG3 -> tree.front());
    t.tree.push_back(newt);
    return t;
-%   | G 
-   G1 -> type = tkn_F;
-   return G1;
+%   | EG 
+   EG1 -> type = tkn_EF;
+   return EG1;
 %   ;
 
-% G : MINUS G 
-   token t = tkn_G;
+% EG : MINUS EG 
+   token t = tkn_EG;
    tree newt = tree("OPCALL");
    newt.pntr->subtrees.push_back(tree("-"));
-   newt.pntr->subtrees.push_back(G2 -> tree.front());
+   newt.pntr->subtrees.push_back(EG2 -> tree.front());
    t.tree.push_back(newt);
    return t;
-%   | PLUS G 
-   return G2;
-%   | H 
-   H1 -> type = tkn_G;
-   return H1;
+%   | PLUS EG 
+   return EG2;
+%   | EH 
+   EH1 -> type = tkn_EG;
+   return EH1;
 %   ;
 
-% H : LPAR B RPAR
-   B2 -> type = tkn_H;
-   return B2;
+% EH : LPAR EB RPAR
+   EB2 -> type = tkn_EH;
+   return EB2;
 %   | IDENTIFIER 
-   token t = tkn_H;
+   token t = tkn_EH;
    tree newt = tree("VAR");
    newt.pntr->subtrees.push_back(tree(IDENTIFIER1 -> id.front()));
    t.tree.push_back(newt);
    return t;
 %   | NUMBER 
-   token h = tkn_H;
+   token h = tkn_EH;
    tree newt = tree("INT");
    newt.pntr->subtrees.push_back(tree(NUMBER1 -> value.front()));
    h.tree.push_back(newt);
    return h;
 %   | IDENTIFIER LPAR LISTARGS RPAR 
-   token t = tkn_H;
+   token t = tkn_EH;
    tree newt = tree("FUNCALL");
    newt.pntr->subtrees.push_back(tree(IDENTIFIER1 -> id.front()));
    for (auto a : LISTARGS3 -> tree) {
@@ -279,11 +279,11 @@
    return t;
 %   ;
 
-% LISTARGS : E 
+% LISTARGS : EB
    token t = tkn_LISTARGS;
-   t.tree.push_back(E1 -> tree.front());
+   t.tree.push_back(EB1 -> tree.front());
    return t;
-%          | LISTARGS COMMA E
-   LISTARGS1 -> tree.push_back(E3 -> tree.front());
+%          | LISTARGS COMMA EB
+   LISTARGS1 -> tree.push_back(EB3 -> tree.front());
    return LISTARGS1;
 %          ;
