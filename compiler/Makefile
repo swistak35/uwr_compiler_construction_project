@@ -33,7 +33,10 @@ token.o : Makefile   token.cpp   token.h
 tree.o : Makefile   tree.cpp   tree.h 
 	$(CPP) -c $(Flags) tree.cpp -o  tree.o
 
-tests: calculator
+maphoon_parser: calculator.m
+	../maphoon2008c/maphoon calculator.m > /dev/null
+
+tests: maphoon_parser calculator
 	./test.sh "basic"
 
 
