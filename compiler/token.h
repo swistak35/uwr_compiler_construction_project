@@ -47,7 +47,9 @@ enum tokentype
    tkn_TYPE,
    tkn_Session,
    tkn_Command,
-   tkn_Start
+   tkn_Start,
+   tkn_FUNARGS,
+   tkn_FUNARG
 };
 
 

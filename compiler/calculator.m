@@ -28,6 +28,8 @@
 %attribute reason        std::string
 
 %constraint TYPE id 1 2
+%constraint FUNARGS tree 1 2
+%constraint FUNARG tree 1 2
 %constraint IDENTIFIER id 1 2
 %constraint E value 0 2
 %constraint F value 0 2
@@ -89,14 +91,13 @@
    t.tree.push_back(newt);
    return t;
 
-%         | FUNKEYWORD TYPE IDENTIFIER LPAR RPAR LBRACKET RBRACKET SEMICOLON
+%         | FUNKEYWORD TYPE IDENTIFIER LPAR FUNARGS RPAR LBRACKET RBRACKET SEMICOLON
 
    token t = tkn_Command;
    tree newt = tree("FUN");
-   if (TYPE2 -> id.size())
-      newt.pntr->subtrees.push_back(tree(TYPE2 -> id.front()));
-   if (IDENTIFIER3 -> id.size())
-      newt.pntr->subtrees.push_back(tree(IDENTIFIER3 -> id.front()));
+   newt.pntr->subtrees.push_back(tree(TYPE2 -> id.front()));
+   newt.pntr->subtrees.push_back(tree(IDENTIFIER3 -> id.front()));
+   newt.pntr->subtrees.push_back(FUNARGS5 -> tree.front());
    t.tree.push_back(newt);
    return t;
 
@@ -104,6 +105,26 @@
 
    std::cout << "recovered from error\n\n";
 
+%         ;
+
+% FUNARG : TYPE IDENTIFIER
+   token t = tkn_FUNARG;
+   tree newt = tree("FUNARG");
+   newt.pntr->subtrees.push_back(tree(TYPE1 -> id.front()));
+   newt.pntr->subtrees.push_back(tree(IDENTIFIER2 -> id.front()));
+   t.tree.push_back(newt);
+   return t;
+%        ;
+
+% FUNARGS : FUNARG
+   token t = tkn_FUNARGS;
+   tree newt = tree("FUNARGS");
+   newt.pntr->subtrees.push_back(FUNARG1 -> tree.front());
+   t.tree.push_back(newt);
+   return t;
+%         | FUNARGS COMMA FUNARG
+   FUNARGS1 -> tree.front().pntr->subtrees.push_back(FUNARG3 -> tree.front());
+   return FUNARGS1;
 %         ;
 
 % TYPE : INT_TYPE

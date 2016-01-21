@@ -69,6 +69,14 @@ bool token::iswellformed( ) const
       if( reason. size( ) >= 1 ) return false;
       if( value. size( ) >= 1 ) return false;
       return true;
+   case tkn_FUNARGS:
+   case tkn_FUNARG:
+      if( id. size( ) >= 1 ) return false;
+      if( reason. size( ) >= 1 ) return false;
+      if( tree. size( ) < 1 ) return false;
+      if( tree. size( ) >= 2 ) return false;
+      if( value. size( ) >= 1 ) return false;
+      return true;
    }
    return false; // Because of unknown type.
 }
@@ -142,6 +150,10 @@ std::ostream& operator << ( std::ostream& stream, const token& t )
       stream << "Command( "; break;
    case tkn_Start:
       stream << "Start( "; break;
+   case tkn_FUNARGS:
+      stream << "FUNARGS( "; break;
+   case tkn_FUNARG:
+      stream << "FUNARG( "; break;
    default:
       stream << "UNKNOWNTOKEN( ";
    }
