@@ -12,4 +12,5 @@ fun float yet_another(float x, float y) {
 fun int main() {
   2 + 3;
   sin(23);
+  return 0;
 }

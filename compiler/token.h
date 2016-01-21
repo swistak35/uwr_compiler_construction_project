@@ -38,6 +38,7 @@ enum tokentype
    tkn_RBRACKET,
    tkn_FUNKEYWORD,
    tkn_WHILE_KW,
+   tkn_RETURN_KW,
    tkn_INT_TYPE,
    tkn_FLOAT_TYPE,
    tkn_B,
