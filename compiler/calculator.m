@@ -253,9 +253,9 @@
    return H1;
 %   ;
 
-% H : LPAR E RPAR
-   E2 -> type = tkn_H;
-   return E2;
+% H : LPAR B RPAR
+   B2 -> type = tkn_H;
+   return B2;
 %   | IDENTIFIER 
    token t = tkn_H;
    tree newt = tree("VAR");

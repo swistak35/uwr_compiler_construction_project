@@ -78,22 +78,22 @@ namespace
       0, 5, 13, 15, 21, 23, 26, 29, 32, 35, 37, 
       39, 41, 43, 56, 69, 71, 75, 78, 80, 83, 
       87, 89, 92, 95, 100, 128, 135, 138, 152, 154, 
-      160, 163, 169, 171, 173, 180, 187, 190, 193, 195, 
-      197, 201, 206, 209, 212, 218, 220, 227, 234, 241, 
+      164, 167, 169, 175, 177, 184, 191, 194, 197, 199, 
+      201, 205, 210, 213, 216, 218, 225, 232, 234, 241, 
       243, 247, 249, 251, 253, 256, 263, 270, 274, 277, 
-      282, 284, 286, 291, 298, 305, 308, 311, 313, 316, 
-      318, 325, 332, 334, 341, 344, 346, 348, 353, 355, 
+      279, 281, 286, 291, 298, 305, 308, 311, 313, 316, 
+      323, 330, 332, 334, 341, 344, 346, 348, 353, 355, 
       358, 0 };
 
    unsigned int defaults [] = {
       0, 1, 2, 3, 3, 5, 6, 7, 8, 9, 10, 
       11, 12, 13, 14, 15, 16, 17, 16, 19, 3, 
       21, 22, 23, 24, 25, 26, 27, 28, 28, 28, 
-      31, 30, 30, 32, 35, 36, 37, 38, 39, 30, 
-      30, 42, 43, 44, 45, 46, 47, 48, 49, 50, 
-      28, 51, 28, 28, 55, 56, 57, 58, 59, 60, 
-      30, 30, 63, 64, 65, 66, 67, 30, 69, 25, 
-      71, 72, 25, 74, 75, 76, 77, 78, 25, 80, 
+      31, 30, 28, 30, 35, 36, 37, 38, 39, 33, 
+      33, 42, 43, 44, 45, 46, 47, 48, 49, 50, 
+      28, 51, 28, 28, 55, 56, 57, 58, 59, 33, 
+      33, 62, 63, 64, 65, 66, 67, 33, 69, 70, 
+      71, 25, 25, 74, 75, 76, 77, 78, 25, 80, 
       0 };
 
    int parsetable [] = 
@@ -168,14 +168,16 @@ namespace
       tkn_G, 10043, 
       tkn_H, 10038, 
       tkn_G, 10044, 
-      tkn_E, 10045, 
+      tkn_B, 10045, 
+      tkn_EC, 10046, 
+      tkn_E, 10047, 
       tkn_F, 10036, 
       tkn_G, 10037, 
       tkn__defaultred, -10003, 0, 
-      tkn_B, 10046, 
-      tkn_EC, 10047, 
-      tkn_E, 10048, 
+      tkn_B, 10048, 
       tkn_E, 10049, 
+      tkn_F, 10036, 
+      tkn_G, 10037, 
       tkn_B, 10050, 
       tkn__defaultred, -10012, 0, 
       tkn_PLUS, 10051, 
@@ -193,16 +195,14 @@ namespace
       tkn_LPAR, 10041, 
       tkn__defaultred, -10030, 0, 
       tkn__defaultred, -10029, 0, 
-      tkn_PLUS, 10051, 
-      tkn_MINUS, 10052, 
       tkn_RPAR, 10059, 
-      tkn_LBRACKET, 10060, 
       tkn__defaultred, -10019, 0, 
-      tkn_OP_EQ, 10061, 
-      tkn_OP_NEQ, 10062, 
+      tkn_OP_EQ, 10060, 
+      tkn_OP_NEQ, 10061, 
       tkn__defaultred, -10022, 0, 
       tkn_PLUS, 10051, 
       tkn_MINUS, 10052, 
+      tkn_LBRACKET, 10062, 
       tkn__defaultred, -10015, 0, 
       tkn_PLUS, 10051, 
       tkn_MINUS, 10052, 
@@ -222,10 +222,10 @@ namespace
       tkn_COMMA, 10068, 
       tkn_RPAR, 10069, 
       tkn__defaultred, -10032, 0, 
-      tkn__defaultred, -10010, 0, 
-      tkn_STATEMENTS, 10070, 
+      tkn_E, 10070, 
       tkn_E, 10071, 
-      tkn_E, 10072, 
+      tkn__defaultred, -10010, 0, 
+      tkn_STATEMENTS, 10072, 
       tkn__defaultred, -10010, 0, 
       tkn_STATEMENTS, 10073, 
       tkn__defaultred, -10023, 0, 
@@ -238,13 +238,13 @@ namespace
       tkn__defaultred, -10027, 0, 
       tkn_E, 10074, 
       tkn__defaultred, -10035, 0, 
-      tkn_RBRACKET, 10075, 
       tkn__defaultred, -10020, 0, 
       tkn_PLUS, 10051, 
       tkn_MINUS, 10052, 
       tkn__defaultred, -10021, 0, 
       tkn_PLUS, 10051, 
       tkn_MINUS, 10052, 
+      tkn_RBRACKET, 10075, 
       tkn_RBRACKET, 10076, 
       tkn__defaultred, -10037, 0, 
       tkn_PLUS, 10051, 
@@ -959,14 +959,14 @@ void reduction_32(
    std::list < token > & stack,
    std::list < token > :: iterator position,
    std::list < token > :: iterator LPAR1,
-   std::list < token > :: iterator E2,
+   std::list < token > :: iterator B2,
    std::list < token > :: iterator RPAR3 ) throw( refused )
 {
 
 #line 256 "calculator.m"
 
-E2 -> type = tkn_H;
-{ reduce( stack, position, tkn_H, E2 ); return; }
+B2 -> type = tkn_H;
+{ reduce( stack, position, tkn_H, B2 ); return; }
 { reduce( stack, position, tkn_H, tkn_H ); return; }
 
 }
