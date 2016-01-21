@@ -1,2 +1,5 @@
+fun int another_func(int bar) {}
+
 fun int main() {
-};
+  2 + 3;
+}

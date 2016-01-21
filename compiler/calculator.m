@@ -9,6 +9,7 @@
 %token LBRACKET RBRACKET
 %token FUNKEYWORD
 %token INT_TYPE FLOAT_TYPE
+%token STATEMENTS STATEMENT
 
 // Non-terminal symbols:
 
@@ -30,6 +31,8 @@
 %constraint TYPE id 1 2
 %constraint FUNARGS tree 1 2
 %constraint FUNARG tree 1 2
+%constraint STATEMENTS tree 1 2
+%constraint STATEMENT tree 1 2
 %constraint IDENTIFIER id 1 2
 %constraint E value 0 2
 %constraint F value 0 2
@@ -91,13 +94,14 @@
    t.tree.push_back(newt);
    return t;
 
-%         | FUNKEYWORD TYPE IDENTIFIER LPAR FUNARGS RPAR LBRACKET RBRACKET SEMICOLON
+%         | FUNKEYWORD TYPE IDENTIFIER LPAR FUNARGS RPAR LBRACKET STATEMENTS RBRACKET
 
    token t = tkn_Command;
    tree newt = tree("FUN");
    newt.pntr->subtrees.push_back(tree(TYPE2 -> id.front()));
    newt.pntr->subtrees.push_back(tree(IDENTIFIER3 -> id.front()));
    newt.pntr->subtrees.push_back(FUNARGS5 -> tree.front());
+   newt.pntr->subtrees.push_back(STATEMENTS8 -> tree.front());
    t.tree.push_back(newt);
    return t;
 
@@ -131,6 +135,22 @@
    t.tree.push_back(newt);
    return t;
 %         ;
+
+% STATEMENTS :
+   token t = tkn_STATEMENTS;
+   tree newt = tree("STATEMENTS");
+   t.tree.push_back(newt);
+   return t;
+%         | STATEMENTS STATEMENT SEMICOLON
+   STATEMENTS1 -> tree.front().pntr->subtrees.push_back(STATEMENT2 -> tree.front());
+   return STATEMENTS1;
+%         ;
+
+% STATEMENT : E
+   token t = tkn_STATEMENT;
+   t.tree.push_back(E1 -> tree.front());
+   return t;
+%           ;
 
 % TYPE : INT_TYPE
    token t = tkn_TYPE;

@@ -51,6 +51,16 @@ bool token::iswellformed( ) const
       if( value. size( ) < 1 ) return false;
       if( value. size( ) >= 2 ) return false;
       return true;
+   case tkn_STATEMENTS:
+   case tkn_STATEMENT:
+   case tkn_FUNARGS:
+   case tkn_FUNARG:
+      if( id. size( ) >= 1 ) return false;
+      if( reason. size( ) >= 1 ) return false;
+      if( tree. size( ) < 1 ) return false;
+      if( tree. size( ) >= 2 ) return false;
+      if( value. size( ) >= 1 ) return false;
+      return true;
    case tkn_E:
    case tkn_F:
    case tkn_G:
@@ -67,14 +77,6 @@ bool token::iswellformed( ) const
    case tkn_Command:
       if( id. size( ) >= 1 ) return false;
       if( reason. size( ) >= 1 ) return false;
-      if( value. size( ) >= 1 ) return false;
-      return true;
-   case tkn_FUNARGS:
-   case tkn_FUNARG:
-      if( id. size( ) >= 1 ) return false;
-      if( reason. size( ) >= 1 ) return false;
-      if( tree. size( ) < 1 ) return false;
-      if( tree. size( ) >= 2 ) return false;
       if( value. size( ) >= 1 ) return false;
       return true;
    }
@@ -132,6 +134,10 @@ std::ostream& operator << ( std::ostream& stream, const token& t )
       stream << "INT_TYPE( "; break;
    case tkn_FLOAT_TYPE:
       stream << "FLOAT_TYPE( "; break;
+   case tkn_STATEMENTS:
+      stream << "STATEMENTS( "; break;
+   case tkn_STATEMENT:
+      stream << "STATEMENT( "; break;
    case tkn_E:
       stream << "E( "; break;
    case tkn_F:

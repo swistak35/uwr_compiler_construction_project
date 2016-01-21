@@ -6,6 +6,7 @@
 Flags = -Wreturn-type -pedantic -pedantic-errors -Wundef -std=c++11
 CPP = g++
 
+compile: maphoon_parser calculator
 
 calculator : Makefile   calculator.o varstore.o parser.o tokenizer.o token.o tree.o 
 	$(CPP) $(Flags) -o calculator   calculator.o varstore.o parser.o tokenizer.o token.o tree.o 

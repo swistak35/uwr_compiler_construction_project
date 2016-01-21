@@ -39,6 +39,8 @@ enum tokentype
    tkn_FUNKEYWORD,
    tkn_INT_TYPE,
    tkn_FLOAT_TYPE,
+   tkn_STATEMENTS,
+   tkn_STATEMENT,
    tkn_E,
    tkn_F,
    tkn_G,
