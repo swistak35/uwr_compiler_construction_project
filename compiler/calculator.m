@@ -3,6 +3,7 @@
 %token SEMICOLON BECOMES COMMA 
 %token IDENTIFIER NUMBER 
 %token PLUS TIMES MINUS DIVIDES
+%token OP_EQ OP_NEQ
 %token FACTORIAL
 %token LPAR RPAR
 %token LBRACKET RBRACKET
@@ -11,7 +12,7 @@
 
 // Non-terminal symbols:
 
-%token B E F G H LISTARGS 
+%token B EC E F G H LISTARGS 
 %token TYPE
 %token STATEMENTS STATEMENT
 %token FUNARGS FUNARG
@@ -35,6 +36,7 @@
 %constraint STATEMENT tree 1 2
 %constraint IDENTIFIER id 1 2
 %constraint B tree 1 2
+%constraint EC tree 1 2
 %constraint E tree 1 2
 %constraint F tree 1 2
 %constraint G tree 1 2
@@ -169,8 +171,29 @@
    return t;
 %      ;
 
-% B : E
-   E1 -> type = tkn_B;
+% B : EC
+   EC1 -> type = tkn_B;
+   return EC1;
+%   ;
+
+% EC : EC OP_EQ E
+   token t = tkn_EC;
+   tree newt = tree("OPCALL");
+   newt.pntr->subtrees.push_back(tree("=="));
+   newt.pntr->subtrees.push_back(EC1 -> tree.front());
+   newt.pntr->subtrees.push_back(E3 -> tree.front());
+   t.tree.push_back(newt);
+   return t;
+%   | EC OP_NEQ E
+   token t = tkn_EC;
+   tree newt = tree("OPCALL");
+   newt.pntr->subtrees.push_back(tree("!="));
+   newt.pntr->subtrees.push_back(EC1 -> tree.front());
+   newt.pntr->subtrees.push_back(E3 -> tree.front());
+   t.tree.push_back(newt);
+   return t;
+%   | E
+   E1 -> type = tkn_EC;
    return E1;
 %   ;
 

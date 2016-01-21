@@ -68,6 +68,17 @@ void tokenizer::scan( )
       lookahead. push_back( tkn_SCANERROR );
       return;
    }
+
+   if (r.lookahead == '=') {
+      r.moveforward();
+      if (r.lookahead == '=') {
+         r.moveforward();
+         lookahead.push_back(tkn_OP_EQ);
+         return;
+      }
+      lookahead.push_back(tkn_SCANERROR);
+      return;
+   }
    
 
    if( r. lookahead == ',' )
@@ -249,11 +260,17 @@ void tokenizer::scan( )
       return;
    }
 
-   if( r. lookahead == '!' )
-   {
-      lookahead. push_back( tkn_FACTORIAL );
-      r. moveforward( );
-      return;
+   if (r.lookahead == '!') {
+      r.moveforward();
+
+      if (r.lookahead == '=') {
+         r.moveforward();
+         lookahead.push_back(tkn_OP_NEQ);
+         return;
+      } else {
+         lookahead.push_back(tkn_FACTORIAL);
+         return;
+      }
    }
 
    if( r. lookahead == '(' )

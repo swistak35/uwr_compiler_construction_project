@@ -20,6 +20,8 @@ bool token::iswellformed( ) const
    case tkn_TIMES:
    case tkn_MINUS:
    case tkn_DIVIDES:
+   case tkn_OP_EQ:
+   case tkn_OP_NEQ:
    case tkn_FACTORIAL:
    case tkn_LPAR:
    case tkn_RPAR:
@@ -57,6 +59,7 @@ bool token::iswellformed( ) const
       if( value. size( ) >= 2 ) return false;
       return true;
    case tkn_B:
+   case tkn_EC:
    case tkn_E:
    case tkn_F:
    case tkn_G:
@@ -116,6 +119,10 @@ std::ostream& operator << ( std::ostream& stream, const token& t )
       stream << "MINUS( "; break;
    case tkn_DIVIDES:
       stream << "DIVIDES( "; break;
+   case tkn_OP_EQ:
+      stream << "OP_EQ( "; break;
+   case tkn_OP_NEQ:
+      stream << "OP_NEQ( "; break;
    case tkn_FACTORIAL:
       stream << "FACTORIAL( "; break;
    case tkn_LPAR:
@@ -144,6 +151,8 @@ std::ostream& operator << ( std::ostream& stream, const token& t )
       stream << "FLOAT_TYPE( "; break;
    case tkn_B:
       stream << "B( "; break;
+   case tkn_EC:
+      stream << "EC( "; break;
    case tkn_E:
       stream << "E( "; break;
    case tkn_F:
