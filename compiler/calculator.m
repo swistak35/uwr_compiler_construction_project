@@ -63,39 +63,16 @@
 %   ;
 
 % Session : Session Command 
-
    if( Command2 -> tree. size( )) {
       std::cout << Command2 -> tree. front( ) << "\n";
    } else {
       std::cout << " Result is undefined\n";
    }
-
 %         |
 %         ;
 
 
-% Command : E SEMICOLON
-
-   token t = tkn_Command;
-   tree newt = tree("compute");
-   if (E1 -> tree.size())
-      newt.pntr->subtrees.push_back(tree(E1 -> tree.front()));
-   t.tree.push_back(newt);
-   return t;
-
-%         | IDENTIFIER BECOMES E SEMICOLON
-
-   token t = tkn_Command;
-   tree newt = tree("assign");
-   if (IDENTIFIER1 -> id.size())
-      newt.pntr->subtrees.push_back(tree(IDENTIFIER1 -> id.front()));
-   if (E3 -> tree.size())
-      newt.pntr->subtrees.push_back(E3 -> tree.front());
-   t.tree.push_back(newt);
-   return t;
-
-%         | FUNKEYWORD TYPE IDENTIFIER LPAR FUNARGS RPAR LBRACKET STATEMENTS RBRACKET
-
+% Command : FUNKEYWORD TYPE IDENTIFIER LPAR FUNARGS RPAR LBRACKET STATEMENTS RBRACKET
    token t = tkn_Command;
    tree newt = tree("FUN");
    newt.pntr->subtrees.push_back(tree(TYPE2 -> id.front()));
@@ -104,11 +81,8 @@
    newt.pntr->subtrees.push_back(STATEMENTS8 -> tree.front());
    t.tree.push_back(newt);
    return t;
-
 %         | _recover SEMICOLON
-
    std::cout << "recovered from error\n\n";
-
 %         ;
 
 % FUNARG : TYPE IDENTIFIER
@@ -150,6 +124,14 @@
    token t = tkn_STATEMENT;
    t.tree.push_back(E1 -> tree.front());
    return t;
+%           | IDENTIFIER BECOMES E
+   token t = tkn_STATEMENT;
+   tree newt = tree("ASSIGN");
+   newt.pntr->subtrees.push_back(tree(IDENTIFIER1 -> id.front()));
+   if (E3 -> tree.size())
+      newt.pntr->subtrees.push_back(E3 -> tree.front());
+   t.tree.push_back(newt);
+   return t;
 %           ;
 
 % TYPE : INT_TYPE
@@ -161,6 +143,16 @@
    t.id.push_back("FLOAT");
    return t;
 %      ;
+
+
+
+
+
+
+
+
+
+
 
 
 

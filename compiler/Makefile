@@ -41,6 +41,6 @@ run: maphoon_parser calculator
 	./calculator
 
 tests: maphoon_parser calculator
-	./test.sh "basic"
+	./test.sh "main"
 
 

@@ -1,5 +1,10 @@
 fun int another_func(int bar) {}
 
+fin float yet_another(float x, float y) {
+  x := 3;
+}
+
 fun int main() {
   2 + 3;
+  sin(23);
 }

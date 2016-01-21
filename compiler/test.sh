@@ -4,13 +4,25 @@
 echo -n "Running '$1'... "
 
 cat "tests/$1.input" | ./calculator > tmp/test_output
-diff tmp/test_output "tests/$1.output" > tmp/diff_output
+result=$?
 
-if [ $? -ne 0 ]
+if [ -f "tests/$1.output" ]
 then
-  echo "FAILED"
-  cat tmp/diff_output
+  diff tmp/test_output "tests/$1.output" > tmp/diff_output
+
+  if [ $? -ne 0 ]
+  then
+    echo "FAILED"
+    cat tmp/diff_output
+  else
+    echo "OK"
+  fi
 else
-  echo "OK"
+  if [ $result -ne 0 ]
+  then
+    echo "FAILED"
+  else
+    echo "OK"
+  fi
 fi
 
