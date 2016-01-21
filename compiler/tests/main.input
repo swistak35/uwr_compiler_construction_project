@@ -2,6 +2,7 @@ fun int another_func(int bar) {}
 
 fin float yet_another(float x, float y) {
   x := 3;
+  y := x + 32 * (1 + x - sin(x, y));
 }
 
 fun int main() {

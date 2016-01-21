@@ -39,19 +39,19 @@ enum tokentype
    tkn_FUNKEYWORD,
    tkn_INT_TYPE,
    tkn_FLOAT_TYPE,
-   tkn_STATEMENTS,
-   tkn_STATEMENT,
    tkn_E,
    tkn_F,
    tkn_G,
    tkn_H,
    tkn_LISTARGS,
    tkn_TYPE,
+   tkn_STATEMENTS,
+   tkn_STATEMENT,
+   tkn_FUNARGS,
+   tkn_FUNARG,
    tkn_Session,
    tkn_Command,
-   tkn_Start,
-   tkn_FUNARGS,
-   tkn_FUNARG
+   tkn_Start
 };
 
 

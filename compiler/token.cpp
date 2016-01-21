@@ -51,6 +51,21 @@ bool token::iswellformed( ) const
       if( value. size( ) < 1 ) return false;
       if( value. size( ) >= 2 ) return false;
       return true;
+   case tkn_E:
+   case tkn_F:
+   case tkn_G:
+   case tkn_H:
+      if( id. size( ) >= 1 ) return false;
+      if( reason. size( ) >= 1 ) return false;
+      if( tree. size( ) >= 2 ) return false;
+      if( value. size( ) >= 1 ) return false;
+      return true;
+   case tkn_LISTARGS:
+   case tkn_Command:
+      if( id. size( ) >= 1 ) return false;
+      if( reason. size( ) >= 1 ) return false;
+      if( value. size( ) >= 1 ) return false;
+      return true;
    case tkn_STATEMENTS:
    case tkn_STATEMENT:
    case tkn_FUNARGS:
@@ -59,24 +74,6 @@ bool token::iswellformed( ) const
       if( reason. size( ) >= 1 ) return false;
       if( tree. size( ) < 1 ) return false;
       if( tree. size( ) >= 2 ) return false;
-      if( value. size( ) >= 1 ) return false;
-      return true;
-   case tkn_E:
-   case tkn_F:
-   case tkn_G:
-   case tkn_H:
-      if( id. size( ) >= 1 ) return false;
-      if( reason. size( ) >= 1 ) return false;
-      if( tree. size( ) >= 2 ) return false;
-      if( value. size( ) >= 2 ) return false;
-      return true;
-   case tkn_LISTARGS:
-      if( id. size( ) >= 1 ) return false;
-      if( reason. size( ) >= 1 ) return false;
-      return true;
-   case tkn_Command:
-      if( id. size( ) >= 1 ) return false;
-      if( reason. size( ) >= 1 ) return false;
       if( value. size( ) >= 1 ) return false;
       return true;
    }
@@ -134,10 +131,6 @@ std::ostream& operator << ( std::ostream& stream, const token& t )
       stream << "INT_TYPE( "; break;
    case tkn_FLOAT_TYPE:
       stream << "FLOAT_TYPE( "; break;
-   case tkn_STATEMENTS:
-      stream << "STATEMENTS( "; break;
-   case tkn_STATEMENT:
-      stream << "STATEMENT( "; break;
    case tkn_E:
       stream << "E( "; break;
    case tkn_F:
@@ -150,16 +143,20 @@ std::ostream& operator << ( std::ostream& stream, const token& t )
       stream << "LISTARGS( "; break;
    case tkn_TYPE:
       stream << "TYPE( "; break;
+   case tkn_STATEMENTS:
+      stream << "STATEMENTS( "; break;
+   case tkn_STATEMENT:
+      stream << "STATEMENT( "; break;
+   case tkn_FUNARGS:
+      stream << "FUNARGS( "; break;
+   case tkn_FUNARG:
+      stream << "FUNARG( "; break;
    case tkn_Session:
       stream << "Session( "; break;
    case tkn_Command:
       stream << "Command( "; break;
    case tkn_Start:
       stream << "Start( "; break;
-   case tkn_FUNARGS:
-      stream << "FUNARGS( "; break;
-   case tkn_FUNARG:
-      stream << "FUNARG( "; break;
    default:
       stream << "UNKNOWNTOKEN( ";
    }

@@ -9,12 +9,13 @@
 %token LBRACKET RBRACKET
 %token FUNKEYWORD
 %token INT_TYPE FLOAT_TYPE
-%token STATEMENTS STATEMENT
 
 // Non-terminal symbols:
 
 %token E F G H LISTARGS 
 %token TYPE
+%token STATEMENTS STATEMENT
+%token FUNARGS FUNARG
 
 %token Session Command 
 %token Start 
@@ -34,15 +35,10 @@
 %constraint STATEMENTS tree 1 2
 %constraint STATEMENT tree 1 2
 %constraint IDENTIFIER id 1 2
-%constraint E value 0 2
-%constraint F value 0 2
-%constraint G value 0 2
-%constraint H value 0 2
 %constraint E tree 0 2
 %constraint F tree 0 2
 %constraint G tree 0 2
 %constraint H tree 0 2
-%constraint LISTARGS value 0
 %constraint LISTARGS tree 0
 %constraint SCANERROR id 1 2
 %constraint NUMBER value 1 2
@@ -115,10 +111,10 @@
    tree newt = tree("STATEMENTS");
    t.tree.push_back(newt);
    return t;
-%         | STATEMENTS STATEMENT SEMICOLON
+%            | STATEMENTS STATEMENT SEMICOLON
    STATEMENTS1 -> tree.front().pntr->subtrees.push_back(STATEMENT2 -> tree.front());
    return STATEMENTS1;
-%         ;
+%            ;
 
 % STATEMENT : E
    token t = tkn_STATEMENT;
@@ -157,7 +153,6 @@
 
 
 % E   : E PLUS F 
-
    token t = tkn_E;
    tree newt = tree("+");
    if (E1 -> tree.size())
@@ -238,38 +233,22 @@
 %    ;
 
 
-% H   : H FACTORIAL
-
-   token t = tkn_H;
-   tree newt = tree("!");
-   if (H1 -> tree.size())
-      newt.pntr->subtrees.push_back(H1 -> tree.front());
-   t.tree.push_back(newt);
-   return t;
- 
-%     | LPAR E RPAR 
- 
+% H : LPAR E RPAR
    E2 -> type = tkn_H;
    return E2;
-
-%     | IDENTIFIER 
-
+%   | IDENTIFIER 
    token h = tkn_H;
-   tree newt = tree("var");
+   tree newt = tree("VAR");
    newt.pntr->subtrees.push_back(tree(IDENTIFIER1 -> id.front()));
    h.tree.push_back(newt);
    return h;
-
-%     | NUMBER 
-
+%   | NUMBER 
    token h = tkn_H;
-   tree newt = tree("num");
+   tree newt = tree("INT");
    newt.pntr->subtrees.push_back(tree(NUMBER1 -> value.front()));
    h.tree.push_back(newt);
    return h;
-
-%     | IDENTIFIER LPAR LISTARGS RPAR 
-
+%   | IDENTIFIER LPAR LISTARGS RPAR 
    token h = tkn_H;
    std::vector<tree> strees = std::vector<tree>();
    for (auto a : LISTARGS3 -> tree) {
@@ -278,20 +257,14 @@
    tree newt = tree(IDENTIFIER1 -> id.front(), strees);
    h.tree.push_back(newt);
    return h;
-
-%     ;
+%   ;
 
 
 % LISTARGS : E 
    token t = tkn_LISTARGS;
    t.tree.push_back(E1 -> tree.front());
    return t;
-
 %          | LISTARGS COMMA E
-
    LISTARGS1 -> tree.push_back(E3 -> tree.front());
    return LISTARGS1;
-
 %          ;
-
-
