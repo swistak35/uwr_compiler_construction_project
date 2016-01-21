@@ -34,6 +34,8 @@ enum tokentype
    tkn_FACTORIAL,
    tkn_LPAR,
    tkn_RPAR,
+   tkn_LBRACKET,
+   tkn_RBRACKET,
    tkn_FUNKEYWORD,
    tkn_E,
    tkn_F,

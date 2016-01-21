@@ -79,14 +79,14 @@ namespace
       78, 81, 86, 89, 92, 94, 98, 103, 106, 109, 
       113, 115, 118, 122, 124, 126, 128, 131, 133, 140, 
       144, 147, 149, 156, 163, 166, 169, 172, 174, 177, 
-      179, 186, 189, 0 };
+      179, 186, 188, 190, 193, 0 };
 
    unsigned int defaults [] = {
       0, 1, 2, 3, 4, 5, 5, 5, 8, 9, 10, 
       11, 12, 13, 14, 7, 7, 17, 18, 19, 9, 
       21, 22, 5, 23, 5, 5, 27, 9, 29, 30, 
       31, 32, 33, 34, 35, 36, 37, 7, 39, 40, 
-      41, 42, 0 };
+      41, 42, 43, 44, 0 };
 
    int parsetable [] = 
    {
@@ -168,10 +168,12 @@ namespace
       tkn__defaultred, -10004, 0, 
       tkn_E, 10041, 
       tkn__defaultred, -10020, 0, 
-      tkn_SEMICOLON, 10042, 
+      tkn_LBRACKET, 10042, 
       tkn__defaultred, -10022, 0, 
       tkn_PLUS, 10023, 
       tkn_MINUS, 10024, 
+      tkn_RBRACKET, 10043, 
+      tkn_SEMICOLON, 10044, 
       tkn__defaultred, -10005, 0, 
    0 };
 
@@ -277,7 +279,7 @@ void reduction_0(
    std::list < token > :: iterator EOF2 ) throw( refused )
 {
 
-#line 52 "calculator.m"
+#line 53 "calculator.m"
 
 std::cout << "bye bye\n";
 { reduce( stack, position, tkn_Start, tkn_Start ); return; }
@@ -292,7 +294,7 @@ void reduction_1(
    std::list < token > :: iterator Command2 ) throw( refused )
 {
 
-#line 56 "calculator.m"
+#line 57 "calculator.m"
 
 
 if( Command2 -> tree. size( )) {
@@ -311,7 +313,7 @@ void reduction_2(
    std::list < token > :: iterator position ) throw( refused )
 {
 
-#line 64 "calculator.m"
+#line 65 "calculator.m"
 
 { reduce( stack, position, tkn_Session, tkn_Session ); return; }
 
@@ -325,7 +327,7 @@ void reduction_3(
    std::list < token > :: iterator SEMICOLON2 ) throw( refused )
 {
 
-#line 68 "calculator.m"
+#line 69 "calculator.m"
 
 
 token t = tkn_Command;
@@ -349,7 +351,7 @@ void reduction_4(
    std::list < token > :: iterator SEMICOLON4 ) throw( refused )
 {
 
-#line 77 "calculator.m"
+#line 78 "calculator.m"
 
 
 token t = tkn_Command;
@@ -360,6 +362,7 @@ if (E3 -> tree.size())
 newt.pntr->subtrees.push_back(E3 -> tree.front());
 t.tree.push_back(newt);
 { reduce( stack, position, tkn_Command, t ); return; }
+
 { reduce( stack, position, tkn_Command, tkn_Command ); return; }
 
 }
@@ -372,10 +375,12 @@ void reduction_5(
    std::list < token > :: iterator IDENTIFIER2,
    std::list < token > :: iterator LPAR3,
    std::list < token > :: iterator RPAR4,
-   std::list < token > :: iterator SEMICOLON5 ) throw( refused )
+   std::list < token > :: iterator LBRACKET5,
+   std::list < token > :: iterator RBRACKET6,
+   std::list < token > :: iterator SEMICOLON7 ) throw( refused )
 {
 
-#line 87 "calculator.m"
+#line 89 "calculator.m"
 
 
 token t = tkn_Command;
@@ -397,7 +402,7 @@ void reduction_6(
    std::list < token > :: iterator SEMICOLON2 ) throw( refused )
 {
 
-#line 96 "calculator.m"
+#line 98 "calculator.m"
 
 
 std::cout << "recovered from error\n\n";
@@ -415,7 +420,7 @@ void reduction_7(
    std::list < token > :: iterator F3 ) throw( refused )
 {
 
-#line 102 "calculator.m"
+#line 104 "calculator.m"
 
 
 token t = tkn_E;
@@ -440,7 +445,7 @@ void reduction_8(
    std::list < token > :: iterator F3 ) throw( refused )
 {
 
-#line 113 "calculator.m"
+#line 115 "calculator.m"
 
 
 token t = tkn_E;
@@ -463,7 +468,7 @@ void reduction_9(
    std::list < token > :: iterator F1 ) throw( refused )
 {
 
-#line 124 "calculator.m"
+#line 126 "calculator.m"
 
 
 // Change F into E, don't touch attribute.
@@ -484,7 +489,7 @@ void reduction_10(
    std::list < token > :: iterator G3 ) throw( refused )
 {
 
-#line 133 "calculator.m"
+#line 135 "calculator.m"
 
 
 token t = tkn_F;
@@ -509,7 +514,7 @@ void reduction_11(
    std::list < token > :: iterator G3 ) throw( refused )
 {
 
-#line 144 "calculator.m"
+#line 146 "calculator.m"
 
 
 token t = tkn_F;
@@ -532,7 +537,7 @@ void reduction_12(
    std::list < token > :: iterator G1 ) throw( refused )
 {
 
-#line 155 "calculator.m"
+#line 157 "calculator.m"
 
 
 G1 -> type = tkn_F;
@@ -550,7 +555,7 @@ void reduction_13(
    std::list < token > :: iterator G2 ) throw( refused )
 {
 
-#line 163 "calculator.m"
+#line 165 "calculator.m"
 
 
 token t = tkn_G;
@@ -572,7 +577,7 @@ void reduction_14(
    std::list < token > :: iterator G2 ) throw( refused )
 {
 
-#line 172 "calculator.m"
+#line 174 "calculator.m"
 
 
 { reduce( stack, position, tkn_G, G2 ); return; }
@@ -588,7 +593,7 @@ void reduction_15(
    std::list < token > :: iterator H1 ) throw( refused )
 {
 
-#line 176 "calculator.m"
+#line 178 "calculator.m"
 
 
 H1 -> type = tkn_G;
@@ -606,7 +611,7 @@ void reduction_16(
    std::list < token > :: iterator FACTORIAL2 ) throw( refused )
 {
 
-#line 184 "calculator.m"
+#line 186 "calculator.m"
 
 
 token t = tkn_H;
@@ -629,7 +634,7 @@ void reduction_17(
    std::list < token > :: iterator RPAR3 ) throw( refused )
 {
 
-#line 193 "calculator.m"
+#line 195 "calculator.m"
 
 
 E2 -> type = tkn_H;
@@ -646,7 +651,7 @@ void reduction_18(
    std::list < token > :: iterator IDENTIFIER1 ) throw( refused )
 {
 
-#line 198 "calculator.m"
+#line 200 "calculator.m"
 
 
 token h = tkn_H;
@@ -666,7 +671,7 @@ void reduction_19(
    std::list < token > :: iterator NUMBER1 ) throw( refused )
 {
 
-#line 206 "calculator.m"
+#line 208 "calculator.m"
 
 
 token h = tkn_H;
@@ -689,7 +694,7 @@ void reduction_20(
    std::list < token > :: iterator RPAR4 ) throw( refused )
 {
 
-#line 214 "calculator.m"
+#line 216 "calculator.m"
 
 
 token h = tkn_H;
@@ -712,7 +717,7 @@ void reduction_21(
    std::list < token > :: iterator E1 ) throw( refused )
 {
 
-#line 228 "calculator.m"
+#line 230 "calculator.m"
 
 token t = tkn_LISTARGS;
 t.tree.push_back(E1 -> tree.front());
@@ -731,7 +736,7 @@ void reduction_22(
    std::list < token > :: iterator E3 ) throw( refused )
 {
 
-#line 233 "calculator.m"
+#line 235 "calculator.m"
 
 
 LISTARGS1 -> tree.push_back(E3 -> tree.front());
@@ -1019,7 +1024,7 @@ case 4:
    reduction_4( parsestack, parsestack. end( ) - 4, parsestack. end( ) - 4, parsestack. end( ) - 3, parsestack. end( ) - 2, parsestack. end( ) - 1 );
    break;
 case 5:
-   reduction_5( parsestack, parsestack. end( ) - 5, parsestack. end( ) - 5, parsestack. end( ) - 4, parsestack. end( ) - 3, parsestack. end( ) - 2, parsestack. end( ) - 1 );
+   reduction_5( parsestack, parsestack. end( ) - 7, parsestack. end( ) - 7, parsestack. end( ) - 6, parsestack. end( ) - 5, parsestack. end( ) - 4, parsestack. end( ) - 3, parsestack. end( ) - 2, parsestack. end( ) - 1 );
    break;
 case 6:
    reduction_6( parsestack, parsestack. end( ) - 2, parsestack. end( ) - 2, parsestack. end( ) - 1 );

@@ -256,6 +256,18 @@ void tokenizer::scan( )
       return; 
    }
 
+   if (r.lookahead == '{') {
+      lookahead.push_back(tkn_LBRACKET);
+      r.moveforward();
+      return;
+   }
+
+   if (r.lookahead == '}') {
+      lookahead.push_back(tkn_RBRACKET);
+      r.moveforward();
+      return;
+   }
+
 
    // If we could not recognize anything, then we produce
    // a scan error.

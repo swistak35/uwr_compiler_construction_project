@@ -6,6 +6,7 @@
 %token PLUS TIMES MINUS DIVIDES
 %token FACTORIAL
 %token LPAR RPAR
+%token LBRACKET RBRACKET
 %token FUNKEYWORD
 
 // Non-terminal symbols:
@@ -84,7 +85,8 @@
       newt.pntr->subtrees.push_back(E3 -> tree.front());
    t.tree.push_back(newt);
    return t;
-%         | FUNKEYWORD IDENTIFIER LPAR RPAR SEMICOLON
+
+%         | FUNKEYWORD IDENTIFIER LPAR RPAR LBRACKET RBRACKET SEMICOLON
 
    token t = tkn_Command;
    tree newt = tree("FUN");
