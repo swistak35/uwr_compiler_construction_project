@@ -125,6 +125,11 @@
 %         | FUNARGS COMMA FUNARG
    FUNARGS1 -> tree.front().pntr->subtrees.push_back(FUNARG3 -> tree.front());
    return FUNARGS1;
+%         |
+   token t = tkn_FUNARGS;
+   tree newt = tree("FUNARGS");
+   t.tree.push_back(newt);
+   return t;
 %         ;
 
 % TYPE : INT_TYPE
