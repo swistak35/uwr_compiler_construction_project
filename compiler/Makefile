@@ -36,6 +36,9 @@ tree.o : Makefile   tree.cpp   tree.h
 maphoon_parser: calculator.m
 	../maphoon2008c/maphoon calculator.m > /dev/null
 
+run: maphoon_parser calculator
+	./calculator
+
 tests: maphoon_parser calculator
 	./test.sh "basic"
 
