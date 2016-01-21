@@ -98,7 +98,7 @@ namespace
       tkn__defaultred, -10002, 0, 
       tkn_Session, 10001, 
       tkn__recover, 10002, 
-      tkn_FUNKEYWORD, 10003, 
+      tkn_FUN_KW, 10003, 
       tkn_EXTERN_KW, 10004, 
       tkn_Command, 10005, 
       tkn_SEMICOLON, 10006, 
@@ -387,7 +387,7 @@ void reduction_2(
 void reduction_3(
    std::list < token > & stack,
    std::list < token > :: iterator position,
-   std::list < token > :: iterator FUNKEYWORD1,
+   std::list < token > :: iterator FUN_KW1,
    std::list < token > :: iterator TYPE2,
    std::list < token > :: iterator IDENTIFIER3,
    std::list < token > :: iterator LPAR4,

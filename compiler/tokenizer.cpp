@@ -89,7 +89,7 @@ void tokenizer::scan( )
       }
 
       if (s.compare("fun") == 0) {
-         lookahead.push_back(tkn_FUNKEYWORD);
+         lookahead.push_back(tkn_FUN_KW);
       } else if (s.compare("while") == 0) {
          lookahead.push_back(tkn_WHILE_KW);
       } else if (s.compare("return") == 0) {

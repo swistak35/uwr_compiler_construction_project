@@ -25,7 +25,7 @@ bool token::iswellformed( ) const
    case tkn_RPAR:
    case tkn_LBRACKET:
    case tkn_RBRACKET:
-   case tkn_FUNKEYWORD:
+   case tkn_FUN_KW:
    case tkn_WHILE_KW:
    case tkn_RETURN_KW:
    case tkn_IF_KW:
@@ -126,8 +126,8 @@ std::ostream& operator << ( std::ostream& stream, const token& t )
       stream << "LBRACKET( "; break;
    case tkn_RBRACKET:
       stream << "RBRACKET( "; break;
-   case tkn_FUNKEYWORD:
-      stream << "FUNKEYWORD( "; break;
+   case tkn_FUN_KW:
+      stream << "FUN_KW( "; break;
    case tkn_WHILE_KW:
       stream << "WHILE_KW( "; break;
    case tkn_RETURN_KW:

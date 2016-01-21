@@ -36,7 +36,7 @@ enum tokentype
    tkn_RPAR,
    tkn_LBRACKET,
    tkn_RBRACKET,
-   tkn_FUNKEYWORD,
+   tkn_FUN_KW,
    tkn_WHILE_KW,
    tkn_RETURN_KW,
    tkn_IF_KW,

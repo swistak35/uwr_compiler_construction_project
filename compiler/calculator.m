@@ -6,7 +6,7 @@
 %token FACTORIAL
 %token LPAR RPAR
 %token LBRACKET RBRACKET
-%token FUNKEYWORD WHILE_KW RETURN_KW IF_KW ELSE_KW EXTERN_KW
+%token FUN_KW WHILE_KW RETURN_KW IF_KW ELSE_KW EXTERN_KW
 %token INT_TYPE FLOAT_TYPE
 
 // Non-terminal symbols:
@@ -67,7 +67,7 @@
 %         |
 %         ;
 
-% Command : FUNKEYWORD TYPE IDENTIFIER LPAR FUNARGS RPAR LBRACKET STATEMENTS RBRACKET
+% Command : FUN_KW TYPE IDENTIFIER LPAR FUNARGS RPAR LBRACKET STATEMENTS RBRACKET
    token t = tkn_Command;
    tree newt = tree("FUN");
    newt.pntr->subtrees.push_back(tree(TYPE2 -> id.front()));
