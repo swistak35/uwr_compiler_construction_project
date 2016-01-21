@@ -41,6 +41,7 @@ enum tokentype
    tkn_RETURN_KW,
    tkn_IF_KW,
    tkn_ELSE_KW,
+   tkn_EXTERN_KW,
    tkn_INT_TYPE,
    tkn_FLOAT_TYPE,
    tkn_B,

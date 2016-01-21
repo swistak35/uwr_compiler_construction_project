@@ -98,6 +98,8 @@ void tokenizer::scan( )
          lookahead.push_back(tkn_IF_KW);
       } else if (s.compare("else") == 0) {
          lookahead.push_back(tkn_ELSE_KW);
+      } else if (s.compare("extern") == 0) {
+         lookahead.push_back(tkn_EXTERN_KW);
       } else if (s.compare("int") == 0) {
          lookahead.push_back(tkn_INT_TYPE);
       } else if (s.compare("float") == 0) {

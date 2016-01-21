@@ -1,3 +1,5 @@
+extern int printf(int x)
+
 fun int another_func(int bar) {}
 
 fun float yet_another(float x, float y) {

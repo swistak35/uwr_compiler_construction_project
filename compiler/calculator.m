@@ -6,7 +6,7 @@
 %token FACTORIAL
 %token LPAR RPAR
 %token LBRACKET RBRACKET
-%token FUNKEYWORD WHILE_KW RETURN_KW IF_KW ELSE_KW
+%token FUNKEYWORD WHILE_KW RETURN_KW IF_KW ELSE_KW EXTERN_KW
 %token INT_TYPE FLOAT_TYPE
 
 // Non-terminal symbols:
@@ -74,6 +74,14 @@
    newt.pntr->subtrees.push_back(tree(IDENTIFIER3 -> id.front()));
    newt.pntr->subtrees.push_back(FUNARGS5 -> tree.front());
    newt.pntr->subtrees.push_back(STATEMENTS8 -> tree.front());
+   t.tree.push_back(newt);
+   return t;
+%         | EXTERN_KW TYPE IDENTIFIER LPAR FUNARGS RPAR
+   token t = tkn_Command;
+   tree newt = tree("EXTERN");
+   newt.pntr->subtrees.push_back(tree(TYPE2 -> id.front()));
+   newt.pntr->subtrees.push_back(tree(IDENTIFIER3 -> id.front()));
+   newt.pntr->subtrees.push_back(FUNARGS5 -> tree.front());
    t.tree.push_back(newt);
    return t;
 %         | _recover SEMICOLON
