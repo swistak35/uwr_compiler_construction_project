@@ -26,6 +26,7 @@ bool token::iswellformed( ) const
    case tkn_LBRACKET:
    case tkn_RBRACKET:
    case tkn_FUNKEYWORD:
+   case tkn_WHILE_KW:
    case tkn_INT_TYPE:
    case tkn_FLOAT_TYPE:
    case tkn_Session:
@@ -51,6 +52,7 @@ bool token::iswellformed( ) const
       if( value. size( ) < 1 ) return false;
       if( value. size( ) >= 2 ) return false;
       return true;
+   case tkn_B:
    case tkn_E:
    case tkn_F:
    case tkn_G:
@@ -122,10 +124,14 @@ std::ostream& operator << ( std::ostream& stream, const token& t )
       stream << "RBRACKET( "; break;
    case tkn_FUNKEYWORD:
       stream << "FUNKEYWORD( "; break;
+   case tkn_WHILE_KW:
+      stream << "WHILE_KW( "; break;
    case tkn_INT_TYPE:
       stream << "INT_TYPE( "; break;
    case tkn_FLOAT_TYPE:
       stream << "FLOAT_TYPE( "; break;
+   case tkn_B:
+      stream << "B( "; break;
    case tkn_E:
       stream << "E( "; break;
    case tkn_F:

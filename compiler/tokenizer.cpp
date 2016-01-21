@@ -90,6 +90,8 @@ void tokenizer::scan( )
 
       if (s.compare("fun") == 0) {
          lookahead.push_back(tkn_FUNKEYWORD);
+      } else if (s.compare("while") == 0) {
+         lookahead.push_back(tkn_WHILE_KW);
       } else if (s.compare("int") == 0) {
          lookahead.push_back(tkn_INT_TYPE);
       } else if (s.compare("float") == 0) {

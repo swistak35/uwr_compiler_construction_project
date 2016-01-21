@@ -6,12 +6,12 @@
 %token FACTORIAL
 %token LPAR RPAR
 %token LBRACKET RBRACKET
-%token FUNKEYWORD
+%token FUNKEYWORD WHILE_KW
 %token INT_TYPE FLOAT_TYPE
 
 // Non-terminal symbols:
 
-%token E F G H LISTARGS 
+%token B E F G H LISTARGS 
 %token TYPE
 %token STATEMENTS STATEMENT
 %token FUNARGS FUNARG
@@ -34,6 +34,7 @@
 %constraint STATEMENTS tree 1 2
 %constraint STATEMENT tree 1 2
 %constraint IDENTIFIER id 1 2
+%constraint B tree 1 2
 %constraint E tree 1 2
 %constraint F tree 1 2
 %constraint G tree 1 2
@@ -127,6 +128,13 @@
    newt.pntr->subtrees.push_back(E3 -> tree.front());
    t.tree.push_back(newt);
    return t;
+%           | WHILE_KW B LBRACKET STATEMENTS RBRACKET
+   token t = tkn_STATEMENT;
+   tree newt = tree("WHILE");
+   newt.pntr->subtrees.push_back(B2 -> tree.front());
+   newt.pntr->subtrees.push_back(STATEMENTS4 -> tree.front());
+   t.tree.push_back(newt);
+   return t;
 %           ;
 
 % TYPE : INT_TYPE
@@ -138,6 +146,11 @@
    t.id.push_back("FLOAT");
    return t;
 %      ;
+
+% B : E
+   E1 -> type = tkn_B;
+   return E1;
+%   ;
 
 % E : E PLUS F 
    token t = tkn_E;

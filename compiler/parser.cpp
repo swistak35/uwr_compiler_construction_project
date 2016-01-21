@@ -36,6 +36,7 @@
 
 
 
+
 #include "token.h"
 #include "tokenizer.h"
 #include "parser.h"
@@ -74,19 +75,19 @@ namespace
    unsigned int starts [] = 
    {
       0, 5, 11, 13, 19, 22, 25, 28, 31, 33, 35, 
-      48, 50, 54, 57, 60, 64, 66, 69, 74, 96, 
-      103, 106, 118, 120, 126, 129, 136, 143, 146, 149, 
-      151, 153, 157, 162, 165, 168, 174, 178, 180, 182, 
-      184, 187, 194, 201, 205, 208, 215, 222, 225, 228, 
-      230, 233, 240, 0 };
+      48, 50, 54, 57, 60, 64, 66, 69, 74, 98, 
+      105, 108, 122, 124, 130, 133, 137, 144, 151, 154, 
+      157, 159, 161, 165, 170, 173, 176, 182, 184, 191, 
+      195, 197, 199, 201, 204, 211, 218, 222, 225, 230, 
+      237, 244, 247, 250, 252, 255, 257, 264, 267, 0 };
 
    unsigned int defaults [] = {
       0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 
       11, 12, 13, 14, 3, 16, 17, 18, 19, 20, 
-      21, 19, 22, 22, 25, 26, 27, 28, 29, 30, 
-      24, 24, 33, 34, 35, 36, 22, 37, 22, 22, 
-      41, 42, 43, 44, 45, 46, 47, 48, 49, 24, 
-      51, 52, 0 };
+      21, 22, 22, 22, 25, 24, 27, 28, 29, 30, 
+      31, 24, 24, 34, 35, 36, 37, 38, 39, 22, 
+      40, 22, 22, 44, 45, 46, 47, 48, 49, 50, 
+      51, 52, 53, 24, 55, 19, 57, 58, 0 };
 
    int parsetable [] = 
    {
@@ -101,8 +102,8 @@ namespace
       tkn_TYPE, 10008, 
       tkn__defaultred, -10001, 0, 
       tkn__defaultred, -10004, 0, 
-      tkn__defaultred, -10013, 0, 
       tkn__defaultred, -10014, 0, 
+      tkn__defaultred, -10015, 0, 
       tkn_IDENTIFIER, 10009, 
       tkn_LPAR, 10010, 
       tkn__defaultred, -10008, 0, 
@@ -128,73 +129,85 @@ namespace
       tkn_MINUS, 10023, 
       tkn_LPAR, 10024, 
       tkn_RBRACKET, 10025, 
-      tkn_E, 10026, 
-      tkn_F, 10027, 
-      tkn_G, 10028, 
-      tkn_H, 10029, 
-      tkn_STATEMENT, 10030, 
-      tkn__defaultred, -10025, 0, 
-      tkn_BECOMES, 10031, 
-      tkn_LPAR, 10032, 
-      tkn__defaultred, -10026, 0, 
-      tkn_IDENTIFIER, 10033, 
-      tkn_RBRACKET, 0, 
-      tkn_E, 0, 
-      tkn_F, 0, 
-      tkn_G, 10034, 
-      tkn_STATEMENT, 0, 
+      tkn_WHILE_KW, 10026, 
+      tkn_E, 10027, 
+      tkn_F, 10028, 
+      tkn_G, 10029, 
+      tkn_H, 10030, 
+      tkn_STATEMENT, 10031, 
+      tkn__defaultred, -10027, 0, 
+      tkn_BECOMES, 10032, 
+      tkn_LPAR, 10033, 
+      tkn__defaultred, -10028, 0, 
+      tkn_IDENTIFIER, 10034, 
+      tkn_NUMBER, 10021, 
+      tkn_PLUS, 10022, 
+      tkn_MINUS, 10023, 
+      tkn_LPAR, 10024, 
       tkn_G, 10035, 
-      tkn_E, 10036, 
-      tkn_F, 10027, 
-      tkn_G, 10028, 
+      tkn_H, 10030, 
+      tkn_G, 10036, 
+      tkn_E, 10037, 
+      tkn_F, 10028, 
+      tkn_G, 10029, 
       tkn__defaultred, -10003, 0, 
+      tkn_B, 10038, 
+      tkn_E, 10039, 
       tkn__defaultred, -10011, 0, 
-      tkn_PLUS, 10037, 
-      tkn_MINUS, 10038, 
-      tkn__defaultred, -10017, 0, 
-      tkn_TIMES, 10039, 
-      tkn_DIVIDES, 10040, 
-      tkn__defaultred, -10020, 0, 
-      tkn__defaultred, -10023, 0, 
-      tkn_SEMICOLON, 10041, 
-      tkn_E, 10042, 
-      tkn_E, 10043, 
-      tkn_LISTARGS, 10044, 
-      tkn__defaultred, -10025, 0, 
-      tkn_LPAR, 10032, 
+      tkn_PLUS, 10040, 
+      tkn_MINUS, 10041, 
+      tkn__defaultred, -10019, 0, 
+      tkn_TIMES, 10042, 
+      tkn_DIVIDES, 10043, 
       tkn__defaultred, -10022, 0, 
-      tkn__defaultred, -10021, 0, 
-      tkn_PLUS, 10037, 
-      tkn_MINUS, 10038, 
-      tkn_RPAR, 10045, 
-      tkn_F, 10046, 
-      tkn_G, 10028, 
-      tkn_F, 10047, 
-      tkn_G, 10048, 
-      tkn_G, 10049, 
+      tkn__defaultred, -10025, 0, 
+      tkn_SEMICOLON, 10044, 
+      tkn_E, 10045, 
+      tkn_E, 10046, 
+      tkn_LISTARGS, 10047, 
+      tkn__defaultred, -10027, 0, 
+      tkn_LPAR, 10033, 
+      tkn__defaultred, -10024, 0, 
+      tkn__defaultred, -10023, 0, 
+      tkn_PLUS, 10040, 
+      tkn_MINUS, 10041, 
+      tkn_RPAR, 10048, 
+      tkn_LBRACKET, 10049, 
+      tkn__defaultred, -10016, 0, 
+      tkn_PLUS, 10040, 
+      tkn_MINUS, 10041, 
+      tkn_F, 10050, 
+      tkn_G, 10029, 
+      tkn_F, 10051, 
+      tkn_G, 10052, 
+      tkn_G, 10053, 
       tkn__defaultred, -10010, 0, 
       tkn__defaultred, -10012, 0, 
-      tkn_PLUS, 10037, 
-      tkn_MINUS, 10038, 
-      tkn__defaultred, -10028, 0, 
-      tkn_PLUS, 10037, 
-      tkn_MINUS, 10038, 
-      tkn_COMMA, 10050, 
-      tkn_RPAR, 10051, 
-      tkn__defaultred, -10024, 0, 
-      tkn__defaultred, -10015, 0, 
-      tkn_TIMES, 10039, 
-      tkn_DIVIDES, 10040, 
-      tkn__defaultred, -10016, 0, 
-      tkn_TIMES, 10039, 
-      tkn_DIVIDES, 10040, 
+      tkn_PLUS, 10040, 
+      tkn_MINUS, 10041, 
+      tkn__defaultred, -10030, 0, 
+      tkn_PLUS, 10040, 
+      tkn_MINUS, 10041, 
+      tkn_COMMA, 10054, 
+      tkn_RPAR, 10055, 
+      tkn__defaultred, -10026, 0, 
+      tkn__defaultred, -10009, 0, 
+      tkn_STATEMENTS, 10056, 
+      tkn__defaultred, -10017, 0, 
+      tkn_TIMES, 10042, 
+      tkn_DIVIDES, 10043, 
       tkn__defaultred, -10018, 0, 
-      tkn__defaultred, -10019, 0, 
-      tkn_E, 10052, 
-      tkn__defaultred, -10027, 0, 
+      tkn_TIMES, 10042, 
+      tkn_DIVIDES, 10043, 
+      tkn__defaultred, -10020, 0, 
+      tkn__defaultred, -10021, 0, 
+      tkn_E, 10057, 
       tkn__defaultred, -10029, 0, 
-      tkn_PLUS, 10037, 
-      tkn_MINUS, 10038, 
+      tkn_RBRACKET, 10058, 
+      tkn__defaultred, -10031, 0, 
+      tkn_PLUS, 10040, 
+      tkn_MINUS, 10041, 
+      tkn__defaultred, -10013, 0, 
    0 };
 
    int entrypoints [] = 
@@ -299,7 +312,7 @@ void reduction_0(
    std::list < token > :: iterator EOF2 ) throw( refused )
 {
 
-#line 56 "calculator.m"
+#line 57 "calculator.m"
 
 std::cout << "bye bye\n";
 { reduce( stack, position, tkn_Start, tkn_Start ); return; }
@@ -314,7 +327,7 @@ void reduction_1(
    std::list < token > :: iterator Command2 ) throw( refused )
 {
 
-#line 60 "calculator.m"
+#line 61 "calculator.m"
 
 if( Command2 -> tree. size( )) {
 std::cout << Command2 -> tree. front( ) << "\n";
@@ -331,7 +344,7 @@ void reduction_2(
    std::list < token > :: iterator position ) throw( refused )
 {
 
-#line 66 "calculator.m"
+#line 67 "calculator.m"
 
 { reduce( stack, position, tkn_Session, tkn_Session ); return; }
 
@@ -352,7 +365,7 @@ void reduction_3(
    std::list < token > :: iterator RBRACKET9 ) throw( refused )
 {
 
-#line 69 "calculator.m"
+#line 70 "calculator.m"
 
 token t = tkn_Command;
 tree newt = tree("FUN");
@@ -374,7 +387,7 @@ void reduction_4(
    std::list < token > :: iterator SEMICOLON2 ) throw( refused )
 {
 
-#line 78 "calculator.m"
+#line 79 "calculator.m"
 
 std::cout << "recovered from error\n\n";
 { reduce( stack, position, tkn_Command, tkn_Command ); return; }
@@ -389,7 +402,7 @@ void reduction_5(
    std::list < token > :: iterator IDENTIFIER2 ) throw( refused )
 {
 
-#line 82 "calculator.m"
+#line 83 "calculator.m"
 
 token t = tkn_FUNARG;
 tree newt = tree("FUNARG");
@@ -408,7 +421,7 @@ void reduction_6(
    std::list < token > :: iterator FUNARG1 ) throw( refused )
 {
 
-#line 91 "calculator.m"
+#line 92 "calculator.m"
 
 token t = tkn_FUNARGS;
 tree newt = tree("FUNARGS");
@@ -428,7 +441,7 @@ void reduction_7(
    std::list < token > :: iterator FUNARG3 ) throw( refused )
 {
 
-#line 97 "calculator.m"
+#line 98 "calculator.m"
 
 FUNARGS1 -> tree.front().pntr->subtrees.push_back(FUNARG3 -> tree.front());
 { reduce( stack, position, tkn_FUNARGS, FUNARGS1 ); return; }
@@ -442,7 +455,7 @@ void reduction_8(
    std::list < token > :: iterator position ) throw( refused )
 {
 
-#line 100 "calculator.m"
+#line 101 "calculator.m"
 
 token t = tkn_FUNARGS;
 tree newt = tree("FUNARGS");
@@ -458,7 +471,7 @@ void reduction_9(
    std::list < token > :: iterator position ) throw( refused )
 {
 
-#line 107 "calculator.m"
+#line 108 "calculator.m"
 
 token t = tkn_STATEMENTS;
 tree newt = tree("STATEMENTS");
@@ -477,7 +490,7 @@ void reduction_10(
    std::list < token > :: iterator SEMICOLON3 ) throw( refused )
 {
 
-#line 112 "calculator.m"
+#line 113 "calculator.m"
 
 STATEMENTS1 -> tree.front().pntr->subtrees.push_back(STATEMENT2 -> tree.front());
 { reduce( stack, position, tkn_STATEMENTS, STATEMENTS1 ); return; }
@@ -492,7 +505,7 @@ void reduction_11(
    std::list < token > :: iterator E1 ) throw( refused )
 {
 
-#line 117 "calculator.m"
+#line 118 "calculator.m"
 
 token t = tkn_STATEMENT;
 tree newt = tree("EXPRESSION");
@@ -512,7 +525,7 @@ void reduction_12(
    std::list < token > :: iterator E3 ) throw( refused )
 {
 
-#line 123 "calculator.m"
+#line 124 "calculator.m"
 
 token t = tkn_STATEMENT;
 tree newt = tree("ASSIGN");
@@ -528,10 +541,33 @@ t.tree.push_back(newt);
 void reduction_13(
    std::list < token > & stack,
    std::list < token > :: iterator position,
+   std::list < token > :: iterator WHILE_KW1,
+   std::list < token > :: iterator B2,
+   std::list < token > :: iterator LBRACKET3,
+   std::list < token > :: iterator STATEMENTS4,
+   std::list < token > :: iterator RBRACKET5 ) throw( refused )
+{
+
+#line 131 "calculator.m"
+
+token t = tkn_STATEMENT;
+tree newt = tree("WHILE");
+newt.pntr->subtrees.push_back(B2 -> tree.front());
+newt.pntr->subtrees.push_back(STATEMENTS4 -> tree.front());
+t.tree.push_back(newt);
+{ reduce( stack, position, tkn_STATEMENT, t ); return; }
+{ reduce( stack, position, tkn_STATEMENT, tkn_STATEMENT ); return; }
+
+}
+
+
+void reduction_14(
+   std::list < token > & stack,
+   std::list < token > :: iterator position,
    std::list < token > :: iterator INT_TYPE1 ) throw( refused )
 {
 
-#line 132 "calculator.m"
+#line 140 "calculator.m"
 
 token t = tkn_TYPE;
 t.id.push_back("INT");
@@ -541,13 +577,13 @@ t.id.push_back("INT");
 }
 
 
-void reduction_14(
+void reduction_15(
    std::list < token > & stack,
    std::list < token > :: iterator position,
    std::list < token > :: iterator FLOAT_TYPE1 ) throw( refused )
 {
 
-#line 136 "calculator.m"
+#line 144 "calculator.m"
 
 token t = tkn_TYPE;
 t.id.push_back("FLOAT");
@@ -557,7 +593,22 @@ t.id.push_back("FLOAT");
 }
 
 
-void reduction_15(
+void reduction_16(
+   std::list < token > & stack,
+   std::list < token > :: iterator position,
+   std::list < token > :: iterator E1 ) throw( refused )
+{
+
+#line 150 "calculator.m"
+
+E1 -> type = tkn_B;
+{ reduce( stack, position, tkn_B, E1 ); return; }
+{ reduce( stack, position, tkn_B, tkn_B ); return; }
+
+}
+
+
+void reduction_17(
    std::list < token > & stack,
    std::list < token > :: iterator position,
    std::list < token > :: iterator E1,
@@ -565,7 +616,7 @@ void reduction_15(
    std::list < token > :: iterator F3 ) throw( refused )
 {
 
-#line 142 "calculator.m"
+#line 155 "calculator.m"
 
 token t = tkn_E;
 tree newt = tree("OPCALL");
@@ -579,7 +630,7 @@ t.tree.push_back(newt);
 }
 
 
-void reduction_16(
+void reduction_18(
    std::list < token > & stack,
    std::list < token > :: iterator position,
    std::list < token > :: iterator E1,
@@ -587,7 +638,7 @@ void reduction_16(
    std::list < token > :: iterator F3 ) throw( refused )
 {
 
-#line 150 "calculator.m"
+#line 163 "calculator.m"
 
 token t = tkn_E;
 tree newt = tree("OPCALL");
@@ -601,13 +652,13 @@ t.tree.push_back(newt);
 }
 
 
-void reduction_17(
+void reduction_19(
    std::list < token > & stack,
    std::list < token > :: iterator position,
    std::list < token > :: iterator F1 ) throw( refused )
 {
 
-#line 158 "calculator.m"
+#line 171 "calculator.m"
 
 F1 -> type = tkn_E;
 { reduce( stack, position, tkn_E, F1 ); return; }
@@ -616,7 +667,7 @@ F1 -> type = tkn_E;
 }
 
 
-void reduction_18(
+void reduction_20(
    std::list < token > & stack,
    std::list < token > :: iterator position,
    std::list < token > :: iterator F1,
@@ -624,7 +675,7 @@ void reduction_18(
    std::list < token > :: iterator G3 ) throw( refused )
 {
 
-#line 163 "calculator.m"
+#line 176 "calculator.m"
 
 token t = tkn_F;
 tree newt = tree("OPCALL");
@@ -638,7 +689,7 @@ t.tree.push_back(newt);
 }
 
 
-void reduction_19(
+void reduction_21(
    std::list < token > & stack,
    std::list < token > :: iterator position,
    std::list < token > :: iterator F1,
@@ -646,7 +697,7 @@ void reduction_19(
    std::list < token > :: iterator G3 ) throw( refused )
 {
 
-#line 171 "calculator.m"
+#line 184 "calculator.m"
 
 token t = tkn_F;
 tree newt = tree("OPCALL");
@@ -660,13 +711,13 @@ t.tree.push_back(newt);
 }
 
 
-void reduction_20(
+void reduction_22(
    std::list < token > & stack,
    std::list < token > :: iterator position,
    std::list < token > :: iterator G1 ) throw( refused )
 {
 
-#line 179 "calculator.m"
+#line 192 "calculator.m"
 
 G1 -> type = tkn_F;
 { reduce( stack, position, tkn_F, G1 ); return; }
@@ -675,14 +726,14 @@ G1 -> type = tkn_F;
 }
 
 
-void reduction_21(
+void reduction_23(
    std::list < token > & stack,
    std::list < token > :: iterator position,
    std::list < token > :: iterator MINUS1,
    std::list < token > :: iterator G2 ) throw( refused )
 {
 
-#line 184 "calculator.m"
+#line 197 "calculator.m"
 
 token t = tkn_G;
 tree newt = tree("OPCALL");
@@ -695,14 +746,14 @@ t.tree.push_back(newt);
 }
 
 
-void reduction_22(
+void reduction_24(
    std::list < token > & stack,
    std::list < token > :: iterator position,
    std::list < token > :: iterator PLUS1,
    std::list < token > :: iterator G2 ) throw( refused )
 {
 
-#line 191 "calculator.m"
+#line 204 "calculator.m"
 
 { reduce( stack, position, tkn_G, G2 ); return; }
 { reduce( stack, position, tkn_G, tkn_G ); return; }
@@ -710,13 +761,13 @@ void reduction_22(
 }
 
 
-void reduction_23(
+void reduction_25(
    std::list < token > & stack,
    std::list < token > :: iterator position,
    std::list < token > :: iterator H1 ) throw( refused )
 {
 
-#line 193 "calculator.m"
+#line 206 "calculator.m"
 
 H1 -> type = tkn_G;
 { reduce( stack, position, tkn_G, H1 ); return; }
@@ -725,7 +776,7 @@ H1 -> type = tkn_G;
 }
 
 
-void reduction_24(
+void reduction_26(
    std::list < token > & stack,
    std::list < token > :: iterator position,
    std::list < token > :: iterator LPAR1,
@@ -733,7 +784,7 @@ void reduction_24(
    std::list < token > :: iterator RPAR3 ) throw( refused )
 {
 
-#line 198 "calculator.m"
+#line 211 "calculator.m"
 
 E2 -> type = tkn_H;
 { reduce( stack, position, tkn_H, E2 ); return; }
@@ -742,13 +793,13 @@ E2 -> type = tkn_H;
 }
 
 
-void reduction_25(
+void reduction_27(
    std::list < token > & stack,
    std::list < token > :: iterator position,
    std::list < token > :: iterator IDENTIFIER1 ) throw( refused )
 {
 
-#line 201 "calculator.m"
+#line 214 "calculator.m"
 
 token t = tkn_H;
 tree newt = tree("VAR");
@@ -760,13 +811,13 @@ t.tree.push_back(newt);
 }
 
 
-void reduction_26(
+void reduction_28(
    std::list < token > & stack,
    std::list < token > :: iterator position,
    std::list < token > :: iterator NUMBER1 ) throw( refused )
 {
 
-#line 207 "calculator.m"
+#line 220 "calculator.m"
 
 token h = tkn_H;
 tree newt = tree("INT");
@@ -778,7 +829,7 @@ h.tree.push_back(newt);
 }
 
 
-void reduction_27(
+void reduction_29(
    std::list < token > & stack,
    std::list < token > :: iterator position,
    std::list < token > :: iterator IDENTIFIER1,
@@ -787,7 +838,7 @@ void reduction_27(
    std::list < token > :: iterator RPAR4 ) throw( refused )
 {
 
-#line 213 "calculator.m"
+#line 226 "calculator.m"
 
 token t = tkn_H;
 tree newt = tree("FUNCALL");
@@ -802,13 +853,13 @@ t.tree.push_back(newt);
 }
 
 
-void reduction_28(
+void reduction_30(
    std::list < token > & stack,
    std::list < token > :: iterator position,
    std::list < token > :: iterator E1 ) throw( refused )
 {
 
-#line 224 "calculator.m"
+#line 237 "calculator.m"
 
 token t = tkn_LISTARGS;
 t.tree.push_back(E1 -> tree.front());
@@ -818,7 +869,7 @@ t.tree.push_back(E1 -> tree.front());
 }
 
 
-void reduction_29(
+void reduction_31(
    std::list < token > & stack,
    std::list < token > :: iterator position,
    std::list < token > :: iterator LISTARGS1,
@@ -826,7 +877,7 @@ void reduction_29(
    std::list < token > :: iterator E3 ) throw( refused )
 {
 
-#line 228 "calculator.m"
+#line 241 "calculator.m"
 
 LISTARGS1 -> tree.push_back(E3 -> tree.front());
 { reduce( stack, position, tkn_LISTARGS, LISTARGS1 ); return; }
@@ -1136,55 +1187,61 @@ case 12:
    reduction_12( parsestack, parsestack. end( ) - 3, parsestack. end( ) - 3, parsestack. end( ) - 2, parsestack. end( ) - 1 );
    break;
 case 13:
-   reduction_13( parsestack, parsestack. end( ) - 1, parsestack. end( ) - 1 );
+   reduction_13( parsestack, parsestack. end( ) - 5, parsestack. end( ) - 5, parsestack. end( ) - 4, parsestack. end( ) - 3, parsestack. end( ) - 2, parsestack. end( ) - 1 );
    break;
 case 14:
    reduction_14( parsestack, parsestack. end( ) - 1, parsestack. end( ) - 1 );
    break;
 case 15:
-   reduction_15( parsestack, parsestack. end( ) - 3, parsestack. end( ) - 3, parsestack. end( ) - 2, parsestack. end( ) - 1 );
+   reduction_15( parsestack, parsestack. end( ) - 1, parsestack. end( ) - 1 );
    break;
 case 16:
-   reduction_16( parsestack, parsestack. end( ) - 3, parsestack. end( ) - 3, parsestack. end( ) - 2, parsestack. end( ) - 1 );
+   reduction_16( parsestack, parsestack. end( ) - 1, parsestack. end( ) - 1 );
    break;
 case 17:
-   reduction_17( parsestack, parsestack. end( ) - 1, parsestack. end( ) - 1 );
+   reduction_17( parsestack, parsestack. end( ) - 3, parsestack. end( ) - 3, parsestack. end( ) - 2, parsestack. end( ) - 1 );
    break;
 case 18:
    reduction_18( parsestack, parsestack. end( ) - 3, parsestack. end( ) - 3, parsestack. end( ) - 2, parsestack. end( ) - 1 );
    break;
 case 19:
-   reduction_19( parsestack, parsestack. end( ) - 3, parsestack. end( ) - 3, parsestack. end( ) - 2, parsestack. end( ) - 1 );
+   reduction_19( parsestack, parsestack. end( ) - 1, parsestack. end( ) - 1 );
    break;
 case 20:
-   reduction_20( parsestack, parsestack. end( ) - 1, parsestack. end( ) - 1 );
+   reduction_20( parsestack, parsestack. end( ) - 3, parsestack. end( ) - 3, parsestack. end( ) - 2, parsestack. end( ) - 1 );
    break;
 case 21:
-   reduction_21( parsestack, parsestack. end( ) - 2, parsestack. end( ) - 2, parsestack. end( ) - 1 );
+   reduction_21( parsestack, parsestack. end( ) - 3, parsestack. end( ) - 3, parsestack. end( ) - 2, parsestack. end( ) - 1 );
    break;
 case 22:
-   reduction_22( parsestack, parsestack. end( ) - 2, parsestack. end( ) - 2, parsestack. end( ) - 1 );
+   reduction_22( parsestack, parsestack. end( ) - 1, parsestack. end( ) - 1 );
    break;
 case 23:
-   reduction_23( parsestack, parsestack. end( ) - 1, parsestack. end( ) - 1 );
+   reduction_23( parsestack, parsestack. end( ) - 2, parsestack. end( ) - 2, parsestack. end( ) - 1 );
    break;
 case 24:
-   reduction_24( parsestack, parsestack. end( ) - 3, parsestack. end( ) - 3, parsestack. end( ) - 2, parsestack. end( ) - 1 );
+   reduction_24( parsestack, parsestack. end( ) - 2, parsestack. end( ) - 2, parsestack. end( ) - 1 );
    break;
 case 25:
    reduction_25( parsestack, parsestack. end( ) - 1, parsestack. end( ) - 1 );
    break;
 case 26:
-   reduction_26( parsestack, parsestack. end( ) - 1, parsestack. end( ) - 1 );
+   reduction_26( parsestack, parsestack. end( ) - 3, parsestack. end( ) - 3, parsestack. end( ) - 2, parsestack. end( ) - 1 );
    break;
 case 27:
-   reduction_27( parsestack, parsestack. end( ) - 4, parsestack. end( ) - 4, parsestack. end( ) - 3, parsestack. end( ) - 2, parsestack. end( ) - 1 );
+   reduction_27( parsestack, parsestack. end( ) - 1, parsestack. end( ) - 1 );
    break;
 case 28:
    reduction_28( parsestack, parsestack. end( ) - 1, parsestack. end( ) - 1 );
    break;
 case 29:
-   reduction_29( parsestack, parsestack. end( ) - 3, parsestack. end( ) - 3, parsestack. end( ) - 2, parsestack. end( ) - 1 );
+   reduction_29( parsestack, parsestack. end( ) - 4, parsestack. end( ) - 4, parsestack. end( ) - 3, parsestack. end( ) - 2, parsestack. end( ) - 1 );
+   break;
+case 30:
+   reduction_30( parsestack, parsestack. end( ) - 1, parsestack. end( ) - 1 );
+   break;
+case 31:
+   reduction_31( parsestack, parsestack. end( ) - 3, parsestack. end( ) - 3, parsestack. end( ) - 2, parsestack. end( ) - 1 );
    break;
 
             default:

@@ -3,6 +3,10 @@ fun int another_func(int bar) {}
 fun float yet_another(float x, float y) {
   x := 3 / 44;
   y := x + 32 * (1 + x - sin(x, y));
+  while (2+3) {
+    print(1);
+    print(2);
+  };
 }
 
 fun int main() {
