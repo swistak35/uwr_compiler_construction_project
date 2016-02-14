@@ -354,15 +354,13 @@ int main(int argc, char* argv []) {
       return 1;
    }
 
-   /* std::cout << tt.lookahead.front().tree.front(); */
+   std::vector< std::unique_ptr<ExprAST> > defs;
    for (auto a : tt.lookahead.front().tree) {
-      /* std::list<tree>::iterator it = tt.lookahead.front().tree.begin(); */
-      /* std::advance(it, 3); */
-      /* auto &a = *it; */
-      /* std::cout << a << std::endl; */
       std::unique_ptr<ExprAST> res = transform(a);
-      ExprAST * expr_ptr = res.get();
-      expr_ptr->pretty_print();
+      if (true) {
+         res.get()->pretty_print();
+      }
+      defs.push_back(std::move(res));
    }
 
    return 0;
