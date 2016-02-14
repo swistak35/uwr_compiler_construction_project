@@ -5,10 +5,41 @@
 #include "parser.h"
 #include <memory>
 
+// for IR compiler
+#include "llvm/ADT/STLExtras.h"
+#include "llvm/IR/IRBuilder.h"
+#include "llvm/IR/LLVMContext.h"
+#include "llvm/IR/Module.h"
+#include "llvm/IR/Verifier.h"
+
+// for JIT execution
+#include "llvm/ExecutionEngine/ExecutionEngine.h"
+#include "llvm/ExecutionEngine/MCJIT.h"
+#include "llvm/ExecutionEngine/SectionMemoryManager.h"
+
+using namespace llvm;
+
+class ArgAST {
+   std::string Name;
+   std::string Type;
+
+   public:
+   ArgAST(const std::string &Name, const std::string &Type) : Name(Name), Type(Type) {}
+
+   std::string getName() { return Name; }
+
+   void pretty_print();
+};
+
+void ArgAST::pretty_print() {
+   std::cout << Type << " " << Name;
+}
+
 class ExprAST {
    public:
    virtual ~ExprAST() {}
    virtual void pretty_print() = 0;
+   virtual Value * codegen() = 0;
 };
 
 class DoubleExprAST : public ExprAST {
@@ -20,10 +51,11 @@ class DoubleExprAST : public ExprAST {
    double getVal() { return this->Val; }
 
    void pretty_print();
+   Value * codegen();
 };
 
 void DoubleExprAST::pretty_print() {
-   std::cout << getVal();
+   std::cout << getVal() << "f";
 }
 
 class IntExprAST : public ExprAST {
@@ -35,6 +67,7 @@ class IntExprAST : public ExprAST {
    int getVal() { return this->Val; }
 
    void pretty_print();
+   Value * codegen();
 };
 
 void IntExprAST::pretty_print() {
@@ -50,6 +83,7 @@ class VariableExprAST : public ExprAST {
    std::string getName() { return this->Name; }
 
    void pretty_print();
+   Value * codegen();
 };
 
 void VariableExprAST::pretty_print() {
@@ -71,6 +105,7 @@ class BinaryExprAST : public ExprAST {
    ExprAST * getRHS() { return RHS.get(); }
 
    void pretty_print();
+   Value * codegen();
 };
 
 void BinaryExprAST::pretty_print() {
@@ -91,6 +126,7 @@ class AssignmentExprAST : public ExprAST {
       : Name(Name), Expr(std::move(Expr)) {}
 
    void pretty_print();
+   Value * codegen();
 };
 
 void AssignmentExprAST::pretty_print() {
@@ -113,6 +149,7 @@ class CallExprAST : public ExprAST {
    }
 
    void pretty_print();
+   Value * codegen();
 };
 
 void CallExprAST::pretty_print() {
@@ -139,6 +176,7 @@ class ExternExprAST : public ExprAST {
       : Name(Name), ReturnType(ReturnType) {}
 
    void pretty_print();
+   Value * codegen();
 };
 
 void ExternExprAST::pretty_print() {
@@ -150,23 +188,24 @@ void ExternExprAST::pretty_print() {
    std::cout << ")\n";
 }
 
-class FunctionDefinitionExprAST : public ExprAST {
+class FunctionDefinitionAST {
    std::string Name;
    std::string ReturnType;
-   std::vector<std::unique_ptr<ExprAST>> Args;
+   std::vector<std::unique_ptr<ArgAST>> Args;
    std::vector<std::unique_ptr<ExprAST>> Body;
 
    public:
-   FunctionDefinitionExprAST(const std::string &Name,
+   FunctionDefinitionAST(const std::string &Name,
          const std::string &ReturnType,
-         std::vector<std::unique_ptr<ExprAST>> Args,
+         std::vector<std::unique_ptr<ArgAST>> Args,
          std::vector<std::unique_ptr<ExprAST>> Body)
       : Name(Name), ReturnType(ReturnType), Args(std::move(Args)), Body(std::move(Body)) {}
 
    void pretty_print();
+   Function * codegen();
 };
 
-void FunctionDefinitionExprAST::pretty_print() {
+void FunctionDefinitionAST::pretty_print() {
    std::cout << "fun " << ReturnType << " " << Name << "(";
    for (auto &a : Args) {
       a->pretty_print();
@@ -190,6 +229,7 @@ class WhileExprAST : public ExprAST {
       : Condition(std::move(Condition)), Body(std::move(Body)) {}
 
    void pretty_print();
+   Value * codegen();
 };
 
 void WhileExprAST::pretty_print() {
@@ -215,6 +255,7 @@ class IfExprAST : public ExprAST {
       : Condition(std::move(Condition)), IfTrue(std::move(IfTrue)), IfFalse(std::move(IfFalse)) {}
 
    void pretty_print();
+   Value * codegen();
 };
 
 void IfExprAST::pretty_print() {
@@ -240,55 +281,18 @@ class ReturnExprAST : public ExprAST {
    ReturnExprAST(std::unique_ptr<ExprAST> Result) : Result(std::move(Result)) {}
 
    void pretty_print();
+   Value * codegen();
 };
 
 void ReturnExprAST::pretty_print() {
-   std::cout << "result ";
+   std::cout << "return ";
    Result->pretty_print();
-}
-
-class ArgAST : public ExprAST {
-   std::string Type;
-   std::string Name;
-
-   public:
-   ArgAST(const std::string &Name, const std::string &Type) : Name(Name), Type(Type) {}
-
-   void pretty_print();
-};
-
-void ArgAST::pretty_print() {
-   std::cout << Type << " " << Name;
 }
 
 std::unique_ptr<ExprAST> transform(tree t) {
    const std::string nodeName = dynamic_cast<const stringvalue*>(t.pntr->val)->s;
 
-   if (nodeName.compare("EXTERN") == 0) {
-      const std::string returnType = dynamic_cast<const stringvalue *>(t.pntr->subtrees.at(0).pntr->val)->s;
-      const std::string name = dynamic_cast<const stringvalue *>(t.pntr->subtrees.at(1).pntr->val)->s;
-      std::vector< std::unique_ptr<ExprAST> > args;
-      for (auto &a : t.pntr->subtrees.at(2).pntr->subtrees) {
-         const std::string argType = dynamic_cast<const stringvalue *>(a.pntr->subtrees.at(0).pntr->val)->s;
-         const std::string argName = dynamic_cast<const stringvalue *>(a.pntr->subtrees.at(1).pntr->val)->s;
-         args.push_back(std::unique_ptr<ExprAST>(new ArgAST(argName, argType)));
-      }
-      return std::unique_ptr<ExprAST>(new ExternExprAST(name, returnType, std::move(args)));
-   } else if (nodeName.compare("FUN") == 0) {
-      const std::string returnType = dynamic_cast<const stringvalue *>(t.pntr->subtrees.at(0).pntr->val)->s;
-      const std::string name = dynamic_cast<const stringvalue *>(t.pntr->subtrees.at(1).pntr->val)->s;
-      std::vector< std::unique_ptr<ExprAST> > args;
-      for (auto &a : t.pntr->subtrees.at(2).pntr->subtrees) {
-         const std::string argType = dynamic_cast<const stringvalue *>(a.pntr->subtrees.at(0).pntr->val)->s;
-         const std::string argName = dynamic_cast<const stringvalue *>(a.pntr->subtrees.at(1).pntr->val)->s;
-         args.push_back(std::unique_ptr<ExprAST>(new ArgAST(argName, argType)));
-      }
-      std::vector< std::unique_ptr<ExprAST> > body;
-      for (auto &a : t.pntr->subtrees.at(3).pntr->subtrees) {
-         body.push_back(transform(a));
-      }
-      return std::unique_ptr<ExprAST>(new FunctionDefinitionExprAST(name, returnType, std::move(args), std::move(body)));
-   } else if (nodeName.compare("ASSIGN") == 0) {
+   if (nodeName.compare("ASSIGN") == 0) {
       const std::string name = dynamic_cast<const stringvalue *>(t.pntr->subtrees.at(0).pntr->val)->s;
       std::unique_ptr<ExprAST> expr = transform(t.pntr->subtrees.at(1));
       return std::unique_ptr<ExprAST>(new AssignmentExprAST(name, std::move(expr)));
@@ -306,7 +310,7 @@ std::unique_ptr<ExprAST> transform(tree t) {
    } else if (nodeName.compare("FUNCALL") == 0) {
       const std::string name = dynamic_cast<const stringvalue *>(t.pntr->subtrees.at(0).pntr->val)->s;
       std::vector< std::unique_ptr<ExprAST> > args;
-      for (int i = 1; i < t.pntr->subtrees.size(); i++) {
+      for (size_t i = 1; i < t.pntr->subtrees.size(); i++) {
          args.push_back(transform(t.pntr->subtrees.at(i)));
       }
       return std::unique_ptr<ExprAST>(new CallExprAST(name, std::move(args)));
@@ -339,6 +343,168 @@ std::unique_ptr<ExprAST> transform(tree t) {
    return std::unique_ptr<ExprAST>(new IntExprAST(3));
 }
 
+std::unique_ptr<FunctionDefinitionAST> transform_func(tree t) {
+   const std::string nodeName = dynamic_cast<const stringvalue*>(t.pntr->val)->s;
+
+   if (nodeName.compare("EXTERN") == 0) {
+      std::cout << "EXTERN MEH ERROR";
+      /* const std::string returnType = dynamic_cast<const stringvalue *>(t.pntr->subtrees.at(0).pntr->val)->s; */
+      /* const std::string name = dynamic_cast<const stringvalue *>(t.pntr->subtrees.at(1).pntr->val)->s; */
+      /* std::vector< std::unique_ptr<ExprAST> > args; */
+      /* for (auto &a : t.pntr->subtrees.at(2).pntr->subtrees) { */
+      /*    const std::string argType = dynamic_cast<const stringvalue *>(a.pntr->subtrees.at(0).pntr->val)->s; */
+      /*    const std::string argName = dynamic_cast<const stringvalue *>(a.pntr->subtrees.at(1).pntr->val)->s; */
+      /*    args.push_back(std::unique_ptr<ExprAST>(new ArgAST(argName, argType))); */
+      /* } */
+      /* return std::unique_ptr<ExprAST>(new ExternExprAST(name, returnType, std::move(args))); */
+      std::vector< std::unique_ptr<ArgAST> > args;
+      std::vector< std::unique_ptr<ExprAST> > body;
+      return std::unique_ptr<FunctionDefinitionAST>(new FunctionDefinitionAST("foo", "bar", std::move(args), std::move(body)));
+   } else if (nodeName.compare("FUN") == 0) {
+      const std::string returnType = dynamic_cast<const stringvalue *>(t.pntr->subtrees.at(0).pntr->val)->s;
+      const std::string name = dynamic_cast<const stringvalue *>(t.pntr->subtrees.at(1).pntr->val)->s;
+      std::vector< std::unique_ptr<ArgAST> > args;
+      for (auto &a : t.pntr->subtrees.at(2).pntr->subtrees) {
+         const std::string argType = dynamic_cast<const stringvalue *>(a.pntr->subtrees.at(0).pntr->val)->s;
+         const std::string argName = dynamic_cast<const stringvalue *>(a.pntr->subtrees.at(1).pntr->val)->s;
+         args.push_back(std::unique_ptr<ArgAST>(new ArgAST(argName, argType)));
+      }
+      std::vector< std::unique_ptr<ExprAST> > body;
+      for (auto &a : t.pntr->subtrees.at(3).pntr->subtrees) {
+         body.push_back(transform(a));
+      }
+      return std::unique_ptr<FunctionDefinitionAST>(new FunctionDefinitionAST(name, returnType, std::move(args), std::move(body)));
+   }
+}
+
+// IR COMPILER
+
+Value *ErrorV(const char *str) {
+   fprintf(stderr, "Error: %s\n", str);
+   return 0;
+}
+
+static std::unique_ptr<Module> TheModule;
+static IRBuilder<> Builder(getGlobalContext());
+static std::map<std::string, Value*> NamedValues;
+
+Value * DoubleExprAST::codegen() {
+   return ConstantFP::get(getGlobalContext(), APFloat(Val));
+}
+
+Value * IntExprAST::codegen() {
+   return ConstantInt::get(getGlobalContext(), APInt(32, Val));
+}
+
+Value *VariableExprAST::codegen() {
+   // Look this variable up in the function.
+   Value *V = NamedValues[Name];
+   return V ? V : ErrorV("Unknown variable name");
+}
+
+Value *ReturnExprAST::codegen() {
+   // Look this variable up in the function.
+   return Result->codegen();
+}
+
+Value *BinaryExprAST::codegen() {
+   Value *L = LHS->codegen();
+   Value *R = RHS->codegen();
+   if (L == 0 || R == 0) {
+      return 0;
+   }
+
+   if (Op.compare("+") == 0) {
+      return Builder.CreateAdd(L, R, "addtmp");
+   } else {
+      return ErrorV("invalid binary operator");
+   }
+      /* case '+': return Builder.CreateFAdd(L, R, "addtmp"); */
+      /* case '-': return Builder.CreateFSub(L, R, "subtmp"); */
+      /* case '*': return Builder.CreateFMul(L, R, "multmp"); */
+      /* case '<': */
+      /*           L = Builder.CreateFCmpULT(L, R, "cmptmp"); */
+      /*           // Convert bool 0/1 to double 0.0 or 1.0 */
+      /*           return Builder.CreateUIToFP(L, Type::getDoubleTy(getGlobalContext()), */
+      /*                           "booltmp"); */
+}
+
+Value * CallExprAST::codegen() {
+   // Look up the name in the global module table.
+   Function *CalleeF = TheModule->getFunction(Callee);
+   if (CalleeF == 0)
+      return ErrorV("Unknown function referenced");
+
+   // If argument mismatch error.
+   if (CalleeF->arg_size() != Args.size())
+      return ErrorV("Incorrect # arguments passed");
+
+   std::vector<Value*> ArgsV;
+   for (unsigned i = 0, e = Args.size(); i != e; ++i) {
+      ArgsV.push_back(Args[i]->codegen());
+      if (ArgsV.back() == 0) return 0;
+   }
+
+   return Builder.CreateCall(CalleeF, ArgsV, "calltmp");
+}
+
+Function *FunctionDefinitionAST::codegen() {
+  // First, check for an existing function from a previous 'extern' declaration.
+  Function *TheFunction = TheModule->getFunction(Name);
+
+  if (!TheFunction) {
+  /*   TheFunction = Proto->codegen(); */
+     // Make the function type:  double(double,double) etc.
+     std::vector<Type *> Ints(Args.size(),
+           Type::getInt32Ty(getGlobalContext()));
+     FunctionType *FT =
+        FunctionType::get(Type::getInt32Ty(getGlobalContext()), Ints, false);
+
+     Function *F =
+        Function::Create(FT, Function::ExternalLinkage, Name, TheModule.get());
+
+     // Set names for all arguments.
+     unsigned Idx = 0;
+     for (auto &Arg : F->args()) {
+        Arg.setName(Args[Idx++]->getName());
+     }
+
+     TheFunction = F;
+  }
+
+  if (!TheFunction)
+    return nullptr;
+
+  // Create a new basic block to start insertion into.
+  BasicBlock *BB = BasicBlock::Create(getGlobalContext(), "entry", TheFunction);
+  Builder.SetInsertPoint(BB);
+
+  // Record the function arguments in the NamedValues map.
+  NamedValues.clear();
+  for (auto &Arg : TheFunction->args())
+    NamedValues[Arg.getName()] = &Arg;
+
+  if (Value *RetVal = Body.front()->codegen()) {
+    // Finish off the function.
+    Builder.CreateRet(RetVal);
+
+    // Validate the generated code, checking for consistency.
+    verifyFunction(*TheFunction);
+
+    return TheFunction;
+  }
+
+  // Error reading body, remove function.
+  TheFunction->eraseFromParent();
+  return nullptr;
+}
+
+Value * IfExprAST::codegen() { return 0; }
+Value * WhileExprAST::codegen() { return 0; }
+Value * AssignmentExprAST::codegen() { return 0; }
+Value * ExternExprAST::codegen() { return 0; }
+
+
 int main(int argc, char* argv []) {
 
    tokenizer tt;
@@ -354,14 +520,23 @@ int main(int argc, char* argv []) {
       return 1;
    }
 
-   std::vector< std::unique_ptr<ExprAST> > defs;
+   std::vector< std::unique_ptr<FunctionDefinitionAST> > defs;
    for (auto a : tt.lookahead.front().tree) {
-      std::unique_ptr<ExprAST> res = transform(a);
+      std::unique_ptr<FunctionDefinitionAST> res = transform_func(a);
       if (true) {
          res.get()->pretty_print();
       }
       defs.push_back(std::move(res));
    }
+
+   TheModule = llvm::make_unique<Module>("my cool jit", getGlobalContext());
+
+   for (auto &func : defs) {
+      Function *llvm_func = func->codegen();
+      /* llvm_func->dump(); */
+   }
+
+   TheModule->dump();
 
    return 0;
 }

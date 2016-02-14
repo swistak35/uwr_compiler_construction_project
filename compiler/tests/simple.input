@@ -1,0 +1,7 @@
+fun float foo(float x) {
+  return (3.0 + x);
+}
+
+fun int main() {
+  return foo(3) + foo(5);
+}

@@ -1,3 +1,10 @@
 *.o
 calculator
 tmp/*
+
+# LLVM bitcode
+*.bc
+# LLVM source code
+*.ll
+# native assembler code
+*.s
