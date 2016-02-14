@@ -46,6 +46,7 @@
 %constraint SCANERROR id 1 2
 %constraint NUMBER value 1 2
 %constraint Command tree 0
+%constraint Session tree 0
 
 %global memory varstore
    // Contains the stored variables.
@@ -59,15 +60,15 @@
 
 % Start : Session EOF
    std::cout << "bye bye\n";
+   return Session1;
 %   ;
 
 % Session : Session Command 
-   if( Command2 -> tree. size( )) {
-      std::cout << Command2 -> tree. front( ) << "\n";
-   } else {
-      std::cout << " Result is undefined\n";
-   }
+   Session1 -> tree.push_back( Command2 -> tree.front() );
+   return Session1;
 %         |
+   token t = tkn_Session;
+   return t;
 %         ;
 
 % Command : FUN_KW TYPE IDENTIFIER LPAR FUNARGS RPAR LBRACKET STATEMENTS RBRACKET

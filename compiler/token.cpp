@@ -37,7 +37,6 @@ bool token::iswellformed( ) const
    case tkn_EXTERN_KW:
    case tkn_INT_TYPE:
    case tkn_FLOAT_TYPE:
-   case tkn_Session:
    case tkn_Start:
       if( id. size( ) >= 1 ) return false;
       if( reason. size( ) >= 1 ) return false;
@@ -77,6 +76,7 @@ bool token::iswellformed( ) const
       if( value. size( ) >= 1 ) return false;
       return true;
    case tkn_LISTARGS:
+   case tkn_Session:
    case tkn_Command:
       if( id. size( ) >= 1 ) return false;
       if( reason. size( ) >= 1 ) return false;
