@@ -23,7 +23,7 @@ class DoubleExprAST : public ExprAST {
 };
 
 void DoubleExprAST::pretty_print() {
-   std::cout << "(DOUBLE " << getVal() << ")";
+   std::cout << getVal();
 }
 
 class IntExprAST : public ExprAST {
@@ -38,7 +38,7 @@ class IntExprAST : public ExprAST {
 };
 
 void IntExprAST::pretty_print() {
-   std::cout << "(INT " << getVal() << ")";
+   std::cout << getVal();
 }
 
 class VariableExprAST : public ExprAST {
@@ -53,20 +53,20 @@ class VariableExprAST : public ExprAST {
 };
 
 void VariableExprAST::pretty_print() {
-   std::cout << "(VAR " << getName() << ")";
+   std::cout << getName();
 }
 
 class BinaryExprAST : public ExprAST {
-   char Op;
+   std::string Op;
    std::unique_ptr<ExprAST> LHS, RHS;
 
    public:
-   BinaryExprAST(char op,
+   BinaryExprAST(const std::string &Op,
          std::unique_ptr<ExprAST> lhs,
          std::unique_ptr<ExprAST> rhs)
-      : Op(op), LHS(std::move(lhs)), RHS(std::move(rhs)) {}
+      : Op(Op), LHS(std::move(lhs)), RHS(std::move(rhs)) {}
 
-   char getOp() { return Op; }
+   const std::string getOp() { return Op; }
    ExprAST * getLHS() { return LHS.get(); }
    ExprAST * getRHS() { return RHS.get(); }
 
@@ -74,10 +74,28 @@ class BinaryExprAST : public ExprAST {
 };
 
 void BinaryExprAST::pretty_print() {
-   std::cout << "(BINOP " << getOp();
+   std::cout << "(";
    getLHS()->pretty_print();
+   std::cout << " " << getOp() << " ";
    getRHS()->pretty_print();
    std::cout << ")";
+}
+
+class AssignmentExprAST : public ExprAST {
+   std::string Name;
+   std::unique_ptr<ExprAST> Expr;
+
+   public:
+   AssignmentExprAST(const std::string &Name,
+         std::unique_ptr<ExprAST> Expr)
+      : Name(Name), Expr(std::move(Expr)) {}
+
+   void pretty_print();
+};
+
+void AssignmentExprAST::pretty_print() {
+   std::cout << Name << " := ";
+   Expr->pretty_print();
 }
 
 class CallExprAST : public ExprAST {
@@ -98,9 +116,10 @@ class CallExprAST : public ExprAST {
 };
 
 void CallExprAST::pretty_print() {
-   std::cout << "(CALL " << getCallee();
+   std::cout << getCallee() << "(";
    for (auto &a : getArgs()) {
       a->pretty_print();
+      std::cout << ", ";
    }
    std::cout << ")";
 }
@@ -115,57 +134,214 @@ class ExternExprAST : public ExprAST {
          const std::string &ReturnType,
          std::vector<std::unique_ptr<ExprAST>> Args)
       : Name(Name), ReturnType(ReturnType), Args(std::move(Args)) {}
+   ExternExprAST(const std::string &Name,
+         const std::string &ReturnType)
+      : Name(Name), ReturnType(ReturnType) {}
 
    void pretty_print();
 };
 
 void ExternExprAST::pretty_print() {
-   std::cout << "(EXTERN " << ReturnType << " " << Name;
+   std::cout << "extern " << ReturnType << " " << Name << "(";
    for (auto &a : Args) {
       a->pretty_print();
+      std::cout << ", ";
    }
-   std::cout << ")";
+   std::cout << ")\n";
+}
+
+class FunctionDefinitionExprAST : public ExprAST {
+   std::string Name;
+   std::string ReturnType;
+   std::vector<std::unique_ptr<ExprAST>> Args;
+   std::vector<std::unique_ptr<ExprAST>> Body;
+
+   public:
+   FunctionDefinitionExprAST(const std::string &Name,
+         const std::string &ReturnType,
+         std::vector<std::unique_ptr<ExprAST>> Args,
+         std::vector<std::unique_ptr<ExprAST>> Body)
+      : Name(Name), ReturnType(ReturnType), Args(std::move(Args)), Body(std::move(Body)) {}
+
+   void pretty_print();
+};
+
+void FunctionDefinitionExprAST::pretty_print() {
+   std::cout << "fun " << ReturnType << " " << Name << "(";
+   for (auto &a : Args) {
+      a->pretty_print();
+      std::cout << ", ";
+   }
+   std::cout << ") {\n";
+   for (auto &a : Body) {
+      a->pretty_print();
+      std::cout << ";\n";
+   }
+   std::cout << "}\n";
+}
+
+class WhileExprAST : public ExprAST {
+   std::unique_ptr<ExprAST> Condition;
+   std::vector<std::unique_ptr<ExprAST>> Body;
+
+   public:
+   WhileExprAST(std::unique_ptr<ExprAST> Condition,
+         std::vector<std::unique_ptr<ExprAST>> Body)
+      : Condition(std::move(Condition)), Body(std::move(Body)) {}
+
+   void pretty_print();
+};
+
+void WhileExprAST::pretty_print() {
+   std::cout << "while (";
+   Condition->pretty_print();
+   std::cout << ") {\n";
+   for (auto &a : Body) {
+      a->pretty_print();
+      std::cout << ";\n";
+   }
+   std::cout << "}";
+}
+
+class IfExprAST : public ExprAST {
+   std::unique_ptr<ExprAST> Condition;
+   std::vector<std::unique_ptr<ExprAST>> IfTrue;
+   std::vector<std::unique_ptr<ExprAST>> IfFalse;
+
+   public:
+   IfExprAST(std::unique_ptr<ExprAST> Condition,
+         std::vector<std::unique_ptr<ExprAST>> IfTrue,
+         std::vector<std::unique_ptr<ExprAST>> IfFalse)
+      : Condition(std::move(Condition)), IfTrue(std::move(IfTrue)), IfFalse(std::move(IfFalse)) {}
+
+   void pretty_print();
+};
+
+void IfExprAST::pretty_print() {
+   std::cout << "if (";
+   Condition->pretty_print();
+   std::cout << ") {\n";
+   for (auto &a : IfTrue) {
+      a->pretty_print();
+      std::cout << ";\n";
+   }
+   std::cout << "} else {";
+   for (auto &a : IfFalse) {
+      a->pretty_print();
+      std::cout << ";\n";
+   }
+   std::cout << "}";
+}
+
+class ReturnExprAST : public ExprAST {
+   std::unique_ptr<ExprAST> Result;
+
+   public:
+   ReturnExprAST(std::unique_ptr<ExprAST> Result) : Result(std::move(Result)) {}
+
+   void pretty_print();
+};
+
+void ReturnExprAST::pretty_print() {
+   std::cout << "result ";
+   Result->pretty_print();
+}
+
+class ArgAST : public ExprAST {
+   std::string Type;
+   std::string Name;
+
+   public:
+   ArgAST(const std::string &Name, const std::string &Type) : Name(Name), Type(Type) {}
+
+   void pretty_print();
+};
+
+void ArgAST::pretty_print() {
+   std::cout << Type << " " << Name;
 }
 
 std::unique_ptr<ExprAST> transform(tree t) {
-   /* std::cout << t.pntr->val << std::endl; */
-   const stringvalue * sv = dynamic_cast<const stringvalue*>(t.pntr->val);
-   std::string s = sv->s;
-   if (s.compare("EXTERN") == 0) {
-      std::cout << "Extern";
-      /* std::vector< std::unique_ptr<ExprAST> > args; */
-      /* return std::unique_ptr<ExprAST>(new ExternExprAST("foo", "bar", args)); */
-      return std::unique_ptr<ExprAST>(new IntExprAST(3));
+   const std::string nodeName = dynamic_cast<const stringvalue*>(t.pntr->val)->s;
+
+   if (nodeName.compare("EXTERN") == 0) {
+      const std::string returnType = dynamic_cast<const stringvalue *>(t.pntr->subtrees.at(0).pntr->val)->s;
+      const std::string name = dynamic_cast<const stringvalue *>(t.pntr->subtrees.at(1).pntr->val)->s;
+      std::vector< std::unique_ptr<ExprAST> > args;
+      for (auto &a : t.pntr->subtrees.at(2).pntr->subtrees) {
+         const std::string argType = dynamic_cast<const stringvalue *>(a.pntr->subtrees.at(0).pntr->val)->s;
+         const std::string argName = dynamic_cast<const stringvalue *>(a.pntr->subtrees.at(1).pntr->val)->s;
+         args.push_back(std::unique_ptr<ExprAST>(new ArgAST(argName, argType)));
+      }
+      return std::unique_ptr<ExprAST>(new ExternExprAST(name, returnType, std::move(args)));
+   } else if (nodeName.compare("FUN") == 0) {
+      const std::string returnType = dynamic_cast<const stringvalue *>(t.pntr->subtrees.at(0).pntr->val)->s;
+      const std::string name = dynamic_cast<const stringvalue *>(t.pntr->subtrees.at(1).pntr->val)->s;
+      std::vector< std::unique_ptr<ExprAST> > args;
+      for (auto &a : t.pntr->subtrees.at(2).pntr->subtrees) {
+         const std::string argType = dynamic_cast<const stringvalue *>(a.pntr->subtrees.at(0).pntr->val)->s;
+         const std::string argName = dynamic_cast<const stringvalue *>(a.pntr->subtrees.at(1).pntr->val)->s;
+         args.push_back(std::unique_ptr<ExprAST>(new ArgAST(argName, argType)));
+      }
+      std::vector< std::unique_ptr<ExprAST> > body;
+      for (auto &a : t.pntr->subtrees.at(3).pntr->subtrees) {
+         body.push_back(transform(a));
+      }
+      return std::unique_ptr<ExprAST>(new FunctionDefinitionExprAST(name, returnType, std::move(args), std::move(body)));
+   } else if (nodeName.compare("ASSIGN") == 0) {
+      const std::string name = dynamic_cast<const stringvalue *>(t.pntr->subtrees.at(0).pntr->val)->s;
+      std::unique_ptr<ExprAST> expr = transform(t.pntr->subtrees.at(1));
+      return std::unique_ptr<ExprAST>(new AssignmentExprAST(name, std::move(expr)));
+   } else if (nodeName.compare("OPCALL") == 0) {
+      const std::string op = dynamic_cast<const stringvalue *>(t.pntr->subtrees.at(0).pntr->val)->s;
+      std::unique_ptr<ExprAST> lhs = transform(t.pntr->subtrees.at(1));
+      std::unique_ptr<ExprAST> rhs = transform(t.pntr->subtrees.at(2));
+      return std::unique_ptr<ExprAST>(new BinaryExprAST(op, std::move(lhs), std::move(rhs)));
+   } else if (nodeName.compare("INT") == 0) {
+      int val = dynamic_cast<const doublevalue *>(t.pntr->subtrees.at(0).pntr->val)->d;
+      return std::unique_ptr<ExprAST>(new IntExprAST(val));
+   } else if (nodeName.compare("VAR") == 0) {
+      const std::string name = dynamic_cast<const stringvalue *>(t.pntr->subtrees.at(0).pntr->val)->s;
+      return std::unique_ptr<ExprAST>(new VariableExprAST(name));
+   } else if (nodeName.compare("FUNCALL") == 0) {
+      const std::string name = dynamic_cast<const stringvalue *>(t.pntr->subtrees.at(0).pntr->val)->s;
+      std::vector< std::unique_ptr<ExprAST> > args;
+      for (int i = 1; i < t.pntr->subtrees.size(); i++) {
+         args.push_back(transform(t.pntr->subtrees.at(i)));
+      }
+      return std::unique_ptr<ExprAST>(new CallExprAST(name, std::move(args)));
+   } else if (nodeName.compare("WHILE") == 0) {
+      std::unique_ptr<ExprAST> condition = transform(t.pntr->subtrees.at(0));
+      std::vector< std::unique_ptr<ExprAST> > body;
+      for (auto &a : t.pntr->subtrees.at(1).pntr->subtrees) {
+         body.push_back(transform(a));
+      }
+      return std::unique_ptr<ExprAST>(new WhileExprAST(std::move(condition), std::move(body)));
+   } else if (nodeName.compare("EXPRESSION") == 0) {
+      std::unique_ptr<ExprAST> e = transform(t.pntr->subtrees.at(0));
+      return e;
+   } else if (nodeName.compare("RETURN") == 0) {
+      std::unique_ptr<ExprAST> result = transform(t.pntr->subtrees.at(0));
+      return std::unique_ptr<ExprAST>(new ReturnExprAST(std::move(result)));
+   } else if (nodeName.compare("IF") == 0) {
+      std::unique_ptr<ExprAST> condition = transform(t.pntr->subtrees.at(0));
+      std::vector< std::unique_ptr<ExprAST> > ifTrue;
+      for (auto &a : t.pntr->subtrees.at(1).pntr->subtrees) {
+         ifTrue.push_back(transform(a));
+      }
+      std::vector< std::unique_ptr<ExprAST> > ifFalse;
+      for (auto &a : t.pntr->subtrees.at(2).pntr->subtrees) {
+         ifFalse.push_back(transform(a));
+      }
+      return std::unique_ptr<ExprAST>(new IfExprAST(std::move(condition), std::move(ifTrue), std::move(ifFalse)));
    }
-   std::cout << "ExprAST name: " << s << std::endl;
+   std::cout << "ExprAST name: " << nodeName << std::endl;
    return std::unique_ptr<ExprAST>(new IntExprAST(3));
 }
 
 int main(int argc, char* argv []) {
 
    tokenizer tt;
-
-#if 0
-   tt. scan( );
-
-   // Test the tokenizer:
-
-   while( tt. lookahead. size( ) && 
-          tt. lookahead. front( ). type != tkn_EOF )
-   {
-      std::cout << tt. lookahead. front( ) << "\n";
-      tt. lookahead. pop_front( ); 
-      tt. scan( ); 
-   }
-
-   // Actually if the size of lookahead gets 0, something went wrong.
-
-   ASSERT( tt. lookahead. size( ));
-   std::cout << tt. lookahead. front( ) << "\n";
-      // This is an EOF token. 
-   return 0;
- 
-#endif
 
    varstore vs;
 
@@ -180,8 +356,10 @@ int main(int argc, char* argv []) {
 
    /* std::cout << tt.lookahead.front().tree.front(); */
    for (auto a : tt.lookahead.front().tree) {
-      /* auto a = tt.looakead.front().tree.front(); */
-      std::cout << a << std::endl;
+      /* std::list<tree>::iterator it = tt.lookahead.front().tree.begin(); */
+      /* std::advance(it, 3); */
+      /* auto &a = *it; */
+      /* std::cout << a << std::endl; */
       std::unique_ptr<ExprAST> res = transform(a);
       ExprAST * expr_ptr = res.get();
       expr_ptr->pretty_print();

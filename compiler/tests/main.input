@@ -1,6 +1,4 @@
-extern int printf(int x)
-
-fun int another_func(int bar) {}
+extern int printf(int x, int y)
 
 fun float yet_another(float x, float y) {
   x := 3 / 44;
@@ -10,6 +8,8 @@ fun float yet_another(float x, float y) {
     print(2);
   };
 }
+
+fun int another_func(int bar) {}
 
 fun int main() {
   2 + 3;
