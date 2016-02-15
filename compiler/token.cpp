@@ -22,6 +22,10 @@ bool token::iswellformed( ) const
    case tkn_DIVIDES:
    case tkn_OP_EQ:
    case tkn_OP_NEQ:
+   case tkn_OP_GE:
+   case tkn_OP_LE:
+   case tkn_OP_GT:
+   case tkn_OP_LT:
    case tkn_OP_AND:
    case tkn_OP_OR:
    case tkn_FACTORIAL:
@@ -125,6 +129,14 @@ std::ostream& operator << ( std::ostream& stream, const token& t )
       stream << "OP_EQ( "; break;
    case tkn_OP_NEQ:
       stream << "OP_NEQ( "; break;
+   case tkn_OP_GE:
+      stream << "OP_GE( "; break;
+   case tkn_OP_LE:
+      stream << "OP_LE( "; break;
+   case tkn_OP_GT:
+      stream << "OP_GT( "; break;
+   case tkn_OP_LT:
+      stream << "OP_LT( "; break;
    case tkn_OP_AND:
       stream << "OP_AND( "; break;
    case tkn_OP_OR:

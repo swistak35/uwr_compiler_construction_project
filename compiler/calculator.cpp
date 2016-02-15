@@ -423,6 +423,14 @@ Value *BinaryExprAST::codegen() {
     return Builder.CreateSub(L, R, "subtmp");
   } else if (Op.compare("==") == 0) {
     return Builder.CreateICmpEQ(L, R, "cmptmp");
+  } else if (Op.compare(">=") == 0) {
+    return Builder.CreateICmpSGE(L, R, "cmptmp");
+  } else if (Op.compare("<=") == 0) {
+    return Builder.CreateICmpSLE(L, R, "cmptmp");
+  } else if (Op.compare(">") == 0) {
+    return Builder.CreateICmpSGT(L, R, "cmptmp");
+  } else if (Op.compare("<") == 0) {
+    return Builder.CreateICmpSLT(L, R, "cmptmp");
   } else if (Op.compare("!=") == 0) {
     return Builder.CreateICmpNE(L, R, "cmptmp");
   } else {
@@ -458,7 +466,7 @@ Value * IfExprAST::codegen() {
   }
 
   // Convert condition to a bool by comparing equal to 0.0.
-  CondV = Builder.CreateICmpEQ(CondV,
+  CondV = Builder.CreateICmpNE(CondV,
       ConstantInt::get(getGlobalContext(), APInt(1, 0)),
       "ifcond");
 

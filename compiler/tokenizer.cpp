@@ -106,6 +106,28 @@ void tokenizer::scan( )
       lookahead.push_back(tkn_SCANERROR);
       return;
    }
+
+   if (r.lookahead == '>') {
+      r.moveforward();
+      if (r.lookahead == '=') {
+         r.moveforward();
+         lookahead.push_back(tkn_OP_GE);
+         return;
+      }
+      lookahead.push_back(tkn_OP_GT);
+      return;
+   }
+
+   if (r.lookahead == '<') {
+      r.moveforward();
+      if (r.lookahead == '=') {
+         r.moveforward();
+         lookahead.push_back(tkn_OP_LE);
+         return;
+      }
+      lookahead.push_back(tkn_OP_LT);
+      return;
+   }
    
 
    if( r. lookahead == ',' )

@@ -1,5 +1,5 @@
 fun float foo(float x) {
-  if (x == 3) {
+  if (x <= 3) {
     return (42.0 + x);
   } else {
     return (4.0 + x);
@@ -7,5 +7,5 @@ fun float foo(float x) {
 }
 
 fun int main() {
-  return foo(1) + foo(0);
+  return foo(1) + foo(5);
 }

@@ -3,7 +3,7 @@
 %token SEMICOLON BECOMES COMMA 
 %token IDENTIFIER NUMBER 
 %token PLUS TIMES MINUS DIVIDES
-%token OP_EQ OP_NEQ
+%token OP_EQ OP_NEQ OP_GE OP_LE OP_GT OP_LT
 %token OP_AND OP_OR
 %token FACTORIAL
 %token LPAR RPAR
@@ -206,6 +206,38 @@
    token t = tkn_EC;
    tree newt = tree("OPCALL");
    newt.pntr->subtrees.push_back(tree("!="));
+   newt.pntr->subtrees.push_back(EC1 -> tree.front());
+   newt.pntr->subtrees.push_back(EE3 -> tree.front());
+   t.tree.push_back(newt);
+   return t;
+%   | EC OP_GT EE
+   token t = tkn_EC;
+   tree newt = tree("OPCALL");
+   newt.pntr->subtrees.push_back(tree(">"));
+   newt.pntr->subtrees.push_back(EC1 -> tree.front());
+   newt.pntr->subtrees.push_back(EE3 -> tree.front());
+   t.tree.push_back(newt);
+   return t;
+%   | EC OP_GE EE
+   token t = tkn_EC;
+   tree newt = tree("OPCALL");
+   newt.pntr->subtrees.push_back(tree(">="));
+   newt.pntr->subtrees.push_back(EC1 -> tree.front());
+   newt.pntr->subtrees.push_back(EE3 -> tree.front());
+   t.tree.push_back(newt);
+   return t;
+%   | EC OP_LT EE
+   token t = tkn_EC;
+   tree newt = tree("OPCALL");
+   newt.pntr->subtrees.push_back(tree("<"));
+   newt.pntr->subtrees.push_back(EC1 -> tree.front());
+   newt.pntr->subtrees.push_back(EE3 -> tree.front());
+   t.tree.push_back(newt);
+   return t;
+%   | EC OP_LE EE
+   token t = tkn_EC;
+   tree newt = tree("OPCALL");
+   newt.pntr->subtrees.push_back(tree("<="));
    newt.pntr->subtrees.push_back(EC1 -> tree.front());
    newt.pntr->subtrees.push_back(EE3 -> tree.front());
    t.tree.push_back(newt);
