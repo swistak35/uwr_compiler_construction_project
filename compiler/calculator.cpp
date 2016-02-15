@@ -408,25 +408,26 @@ Value *ReturnExprAST::codegen() {
 }
 
 Value *BinaryExprAST::codegen() {
-   Value *L = LHS->codegen();
-   Value *R = RHS->codegen();
-   if (L == 0 || R == 0) {
-      return 0;
-   }
+  Value *L = LHS->codegen();
+  Value *R = RHS->codegen();
 
-   if (Op.compare("+") == 0) {
-      return Builder.CreateAdd(L, R, "addtmp");
-   } else {
-      return ErrorV("invalid binary operator");
-   }
-      /* case '+': return Builder.CreateFAdd(L, R, "addtmp"); */
-      /* case '-': return Builder.CreateFSub(L, R, "subtmp"); */
-      /* case '*': return Builder.CreateFMul(L, R, "multmp"); */
-      /* case '<': */
-      /*           L = Builder.CreateFCmpULT(L, R, "cmptmp"); */
-      /*           // Convert bool 0/1 to double 0.0 or 1.0 */
-      /*           return Builder.CreateUIToFP(L, Type::getDoubleTy(getGlobalContext()), */
-      /*                           "booltmp"); */
+  if (L == 0 || R == 0) {
+    return 0;
+  }
+
+  if (Op.compare("+") == 0) {
+    return Builder.CreateAdd(L, R, "addtmp");
+  } else if (Op.compare("*") == 0) {
+    return Builder.CreateMul(L, R, "multmp");
+  } else if (Op.compare("-") == 0) {
+    return Builder.CreateSub(L, R, "subtmp");
+  } else if (Op.compare("==") == 0) {
+    return Builder.CreateICmpEQ(L, R, "cmptmp");
+  } else if (Op.compare("!=") == 0) {
+    return Builder.CreateICmpNE(L, R, "cmptmp");
+  } else {
+    return ErrorV("invalid binary operator");
+  }
 }
 
 Value * CallExprAST::codegen() {
@@ -458,7 +459,7 @@ Value * IfExprAST::codegen() {
 
   // Convert condition to a bool by comparing equal to 0.0.
   CondV = Builder.CreateICmpEQ(CondV,
-      ConstantInt::get(getGlobalContext(), APInt(32, 0)),
+      ConstantInt::get(getGlobalContext(), APInt(1, 0)),
       "ifcond");
 
   Function *TheFunction = Builder.GetInsertBlock()->getParent();

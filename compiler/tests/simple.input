@@ -1,11 +1,11 @@
 fun float foo(float x) {
-  if (1) {
-    return (3.0 + x);
+  if (x == 3) {
+    return (42.0 + x);
   } else {
     return (4.0 + x);
   };
 }
 
 fun int main() {
-  return foo(3) + foo(5);
+  return foo(1) + foo(0);
 }
