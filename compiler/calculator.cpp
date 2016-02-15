@@ -448,6 +448,63 @@ Value * CallExprAST::codegen() {
    return Builder.CreateCall(CalleeF, ArgsV, "calltmp");
 }
 
+Value * IfExprAST::codegen() {
+  Value *CondV = Condition->codegen();
+
+  if (CondV == 0) {
+    // generating of condition code failed
+    return 0;
+  }
+
+  // Convert condition to a bool by comparing equal to 0.0.
+  CondV = Builder.CreateICmpEQ(CondV,
+      ConstantInt::get(getGlobalContext(), APInt(32, 0)),
+      "ifcond");
+
+  Function *TheFunction = Builder.GetInsertBlock()->getParent();
+
+  // Create blocks for the then and else cases.  Insert the 'then' block at the
+  // end of the function.
+  BasicBlock *ThenBB = BasicBlock::Create(getGlobalContext(), "then", TheFunction);
+  BasicBlock *ElseBB = BasicBlock::Create(getGlobalContext(), "else");
+  BasicBlock *MergeBB = BasicBlock::Create(getGlobalContext(), "ifcont");
+
+  Builder.CreateCondBr(CondV, ThenBB, ElseBB);
+
+  // Emit then value.
+  Builder.SetInsertPoint(ThenBB);
+
+  Value *ThenV = IfTrue.front()->codegen();
+  if (ThenV == 0) return 0;
+
+  Builder.CreateBr(MergeBB);
+  // Codegen of 'Then' can change the current block, update ThenBB for the PHI.
+  ThenBB = Builder.GetInsertBlock();
+
+  // Emit else block.
+  TheFunction->getBasicBlockList().push_back(ElseBB);
+  Builder.SetInsertPoint(ElseBB);
+
+  Value *ElseV = IfFalse.front()->codegen();
+  if (ElseV == 0) {
+    return 0;
+  }
+
+  Builder.CreateBr(MergeBB);
+  // Codegen of 'Else' can change the current block, update ElseBB for the PHI.
+  ElseBB = Builder.GetInsertBlock();
+
+  // Emit merge block.
+  TheFunction->getBasicBlockList().push_back(MergeBB);
+  Builder.SetInsertPoint(MergeBB);
+  PHINode *PN = Builder.CreatePHI(Type::getInt32Ty(getGlobalContext()), 2, "iftmp");
+
+  PN->addIncoming(ThenV, ThenBB);
+  PN->addIncoming(ElseV, ElseBB);
+  return PN;
+}
+
+
 Function *FunctionDefinitionAST::codegen() {
   // First, check for an existing function from a previous 'extern' declaration.
   Function *TheFunction = TheModule->getFunction(Name);
@@ -499,7 +556,6 @@ Function *FunctionDefinitionAST::codegen() {
   return nullptr;
 }
 
-Value * IfExprAST::codegen() { return 0; }
 Value * WhileExprAST::codegen() { return 0; }
 Value * AssignmentExprAST::codegen() { return 0; }
 Value * ExternExprAST::codegen() { return 0; }
@@ -523,9 +579,7 @@ int main(int argc, char* argv []) {
    std::vector< std::unique_ptr<FunctionDefinitionAST> > defs;
    for (auto a : tt.lookahead.front().tree) {
       std::unique_ptr<FunctionDefinitionAST> res = transform_func(a);
-      if (true) {
-         res.get()->pretty_print();
-      }
+      /* res.get()->pretty_print(); */
       defs.push_back(std::move(res));
    }
 
